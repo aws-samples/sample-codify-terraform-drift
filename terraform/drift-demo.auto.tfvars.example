@@ -1,0 +1,77 @@
+# Local deployment values for this estate. Auto-loaded by Terraform, so `terraform apply`
+# needs no -var flags.
+#
+# Template. Copy to drift-demo.auto.tfvars and fill in.
+#
+# The real file is gitignored, deliberately. Nothing here is a secret - the credentials live in Secrets Manager
+# and are referenced by name - but it does carry an AWS account id, a repository slug and bucket
+# names, which are account identifiers and do not belong in a repository meant for distribution.
+# Copy it to drift-demo.auto.tfvars.example with the identifiers replaced if you want a template
+# in version control.
+
+# --- what to inspect --------------------------------------------------------
+
+target_repo_url     = "github.com/YOUR_ORG/YOUR_INFRA_REPO.git"
+target_repo_slug    = "YOUR_ORG/YOUR_INFRA_REPO"
+target_repo_ref     = "main"
+target_working_dir  = "environments/dev"
+target_state_bucket = "YOUR_STATE_BUCKET"
+target_state_key    = "environments/dev/terraform.tfstate"
+target_lock_table   = "YOUR_LOCK_TABLE"
+
+# --- this deployment --------------------------------------------------------
+
+aws_region   = "us-east-1"
+name_prefix  = "drift-demo"
+workspace_id = "dev"
+
+# Two consecutive observations before drift may be codified. Below 2 the debounce is inert.
+required_samples = 2
+
+# --- stages -----------------------------------------------------------------
+
+# The read-only half. Deployable and trustworthy on its own.
+# (detection is always provisioned; these switch on what follows it)
+enable_codify        = false
+enable_orchestration = false
+
+# Empty disables the schedule. Set to e.g. "rate(1 day)" once you are willing to let the
+# pipeline run unattended - note that with orchestration enabled the schedule starts the state
+# machine, and the state machine can open pull requests without anyone watching.
+schedule_expression = ""
+
+# --- the agent --------------------------------------------------------------
+
+# Pinned to a dated version, not a floating alias: the same drift should produce the same diff.
+# A pinned model eventually goes legacy and Bedrock refuses it with an error naming the model,
+# so this needs periodic review rather than neglect.
+model_id = "us.anthropic.claude-sonnet-4-5-20250929-v1:0"
+
+# Named ARNs, never "*". A cross-region inference profile needs the profile plus the underlying
+# foundation model in every region it can route to, which is why this is a list.
+model_invoke_arns = [
+  "arn:aws:bedrock:us-east-1:000000000000:inference-profile/us.anthropic.claude-sonnet-4-5-20250929-v1:0",
+  "arn:aws:bedrock:us-east-1::foundation-model/anthropic.claude-sonnet-4-5-20250929-v1:0",
+  "arn:aws:bedrock:us-east-2::foundation-model/anthropic.claude-sonnet-4-5-20250929-v1:0",
+  "arn:aws:bedrock:us-west-2::foundation-model/anthropic.claude-sonnet-4-5-20250929-v1:0",
+]
+
+# --- the write credential ---------------------------------------------------
+
+# A GitHub App, so the write path uses tokens scoped to one repository, limited to Contents and
+# Pull requests, and valid for an hour. Leave both empty to fall back to a personal access
+# token - which authenticates as a person, reaches every repository they can see, and does not
+# expire.
+github_app_id            = ""
+github_app_key_secret_id = ""
+
+# --- source packaging -------------------------------------------------------
+
+# Terraform packages this repository and uploads it, so no git remote is required. Set false to
+# point CodeBuild at a real repository via source_type and source_location.
+package_source = true
+
+# source_commit is intentionally NOT set here: it should be the commit being deployed, so pass it
+# per apply rather than letting a stale value claim provenance it does not have.
+#
+#   terraform apply -var "source_commit=$(git -C .. rev-parse HEAD)"

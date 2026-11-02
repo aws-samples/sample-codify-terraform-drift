@@ -1,0 +1,223 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/awslabs/automated-security-helper/refs/heads/main/automated_security_helper/schemas/AshConfig.json
+#
+# NOTE: `path` is REQUIRED on every suppression. ASH does not warn and carry on if it is
+# missing - it discards the whole file and falls back to defaults, logging one ERROR line to
+# .ash/ash.log. A config that silently does nothing is worse than no config, because the
+# suppressions read as reviewed when none of them are in effect. Check the log line
+# "Using config file found at" is not followed by "Using default configuration due to
+# validation error" after editing this file.
+
+project_name: drift-to-code
+
+global_settings:
+    severity_threshold: MEDIUM
+
+    ignore_paths:
+        - path: '.terraform'
+          reason: 'Terraform provider cache'
+        - path: '.ash'
+          reason: 'ASH scan output'
+        - path: '.source-packages'
+          reason: 'Generated zips of this repository, produced at plan time'
+        - path: 'build'
+          reason: 'Build artifacts'
+        - path: 'dist'
+          reason: 'Build artifacts'
+        - path: '.pytest_cache'
+          reason: 'Test runner cache'
+        - path: '**/__pycache__'
+          reason: 'Python bytecode'
+        - path: '.terraform.lock.hcl'
+          reason: 'Provider hashes, not secrets'
+
+        # Captured `terraform show -json` output used as test evidence. Checkov reads plan JSON
+        # and evaluates the resources described in it, so scanning these reports findings about
+        # the SAMPLE ESTATE being watched - its security groups, its buckets - and not about
+        # any infrastructure this repository deploys. Nine rules fire here and nowhere else.
+        # Those findings are the pattern's own baseline concept, which is why gate verdicts are
+        # deltas against a baseline rather than absolute counts.
+        - path: 'tests/fixtures'
+          reason: 'Captured plan output; findings describe the watched estate, not this deployment'
+
+    suppressions:
+        # --- false positives -------------------------------------------------
+        # Both resources exist and are correct. The graph check cannot resolve a count-indexed
+        # bucket reference, which is why each fires only for the source bucket and never for
+        # the artifacts bucket, where the same configuration is written without count. See
+        # aws_s3_bucket_public_access_block.source and aws_s3_bucket_versioning.source.
+        - rule_id: 'CKV2_AWS_6'
+          path: 'terraform/main.tf'
+          reason: 'False positive: public access block IS configured; graph check cannot follow the count-indexed bucket'
+        - rule_id: 'CKV_AWS_21'
+          path: 'terraform/main.tf'
+          reason: 'False positive: versioning IS enabled; graph check cannot follow the count-indexed bucket'
+
+        # A deliberately invented identifier, "quicksightns-0a1b2c3d4e5f6789", in the test that
+        # proves the fixture leak scan catches identifier classes the redactor does not
+        # enumerate. It has to look like a real identifier for the test to mean anything, so it
+        # trips an entropy check by construction. Not a credential.
+        - rule_id: 'SECRET-BASE64-HIGH-ENTROPY-STRING'
+          path: 'tests/test_real_fixtures.py'
+          reason: 'False positive: invented placeholder identifier asserted by the leak-scan test'
+
+        # --- addressed in code, not waved away --------------------------------
+        # The rule is right that urlopen honours file:// and the URL is built from a
+        # configurable API root. urllib_transport now asserts the scheme is https before
+        # opening anything, covered by three tests in tests/test_mcp_github.py including one
+        # that fails if the check runs after urlopen. Suppressed because the pattern match on
+        # dynamic urllib use remains true; the risk it points at does not.
+        - rule_id: 'python.lang.security.audit.dynamic-urllib-use-detected.dynamic-urllib-use-detected'
+          path: 'src/driftcode/mcp/github.py'
+          reason: 'Addressed: transport asserts an https scheme before urlopen; see test_the_transport_refuses_a_file_url'
+
+        # --- accepted for a reference implementation --------------------------
+        # Real findings, each a deliberate scope decision for a single-region sample. Every one
+        # would be revisited for production use.
+        - rule_id: 'CKV_AWS_18'
+          path: 'terraform/main.tf'
+          reason: 'S3 access logging would require a further log bucket; out of scope for the sample'
+        - rule_id: 'CKV_AWS_144'
+          path: 'terraform/main.tf'
+          reason: 'Single-region sample; cross-region replication not modelled'
+        - rule_id: 'CKV2_AWS_62'
+          path: 'terraform/main.tf'
+          reason: 'No consumer of S3 event notifications in this design'
+        - rule_id: 'CKV2_AWS_61'
+          path: 'terraform/main.tf'
+          reason: 'Payload objects are small and versioned; no lifecycle transition needed'
+        - rule_id: 'CKV_AWS_300'
+          path: 'terraform/main.tf'
+          reason: 'Uploads are single small archives written by Terraform, not multipart'
+        - rule_id: 'CKV_AWS_145'
+          path: 'terraform/main.tf'
+          reason: 'Source bucket uses SSE-S3; it holds this repository packaged, not customer data'
+        - rule_id: 'CKV2_AWS_57'
+          path: 'terraform/main.tf'
+          reason: 'GitHub App private key is rotated in GitHub, so rotation cannot be driven from Secrets Manager'
+        - rule_id: 'CKV_AWS_149'
+          path: 'terraform/main.tf'
+          reason: 'Secrets use the AWS-managed Secrets Manager key; the IAM grant is scoped by kms:ViaService'
+        - rule_id: 'CKV_AWS_28'
+          path: 'terraform/stepfunctions.tf'
+          reason: 'Lease is reconstructable and the ledger is advisory; point-in-time recovery not modelled'
+
+        # DynamoDB tables use the AWS-owned key. They hold drift signatures, build numbers and
+        # an execution ARN.
+        - rule_id: 'CKV_AWS_119'
+          path: 'terraform/main.tf'
+          reason: 'AWS-owned key; tables hold drift signatures and build numbers'
+        - rule_id: 'CKV_AWS_119'
+          path: 'terraform/stepfunctions.tf'
+          reason: 'AWS-owned key; lease table holds an execution ARN and a counter'
+        - rule_id: 'terraform.aws.security.aws-dynamodb-table-unencrypted.aws-dynamodb-table-unencrypted'
+          path: 'terraform/main.tf'
+          reason: 'Duplicate of CKV_AWS_119; AWS-owned key is accepted for the sample'
+        - rule_id: 'terraform.aws.security.aws-dynamodb-table-unencrypted.aws-dynamodb-table-unencrypted'
+          path: 'terraform/stepfunctions.tf'
+          reason: 'Duplicate of CKV_AWS_119; AWS-owned key is accepted for the sample'
+        - rule_id: 'terraform.aws.security.aws-secretsmanager-secret-unencrypted.aws-secretsmanager-secret-unencrypted'
+          path: 'terraform/main.tf'
+          reason: 'Duplicate of CKV_AWS_149; AWS-managed Secrets Manager key is accepted for the sample'
+
+        # CodeBuild projects use the AWS-managed key rather than a customer-managed CMK.
+        - rule_id: 'CKV_AWS_147'
+          path: 'terraform/main.tf'
+          reason: 'AWS-managed key; no customer-managed CMK in the sample'
+        - rule_id: 'CKV_AWS_147'
+          path: 'terraform/codify.tf'
+          reason: 'AWS-managed key; no customer-managed CMK in the sample'
+        - rule_id: 'CKV_AWS_147'
+          path: 'terraform/gates.tf'
+          reason: 'AWS-managed key; no customer-managed CMK in the sample'
+        - rule_id: 'terraform.aws.security.aws-codebuild-project-unencrypted.aws-codebuild-project-unencrypted'
+          path: 'terraform/main.tf'
+          reason: 'Duplicate of CKV_AWS_147'
+        - rule_id: 'terraform.aws.security.aws-codebuild-project-unencrypted.aws-codebuild-project-unencrypted'
+          path: 'terraform/codify.tf'
+          reason: 'Duplicate of CKV_AWS_147'
+        - rule_id: 'terraform.aws.security.aws-codebuild-project-unencrypted.aws-codebuild-project-unencrypted'
+          path: 'terraform/gates.tf'
+          reason: 'Duplicate of CKV_AWS_147'
+
+        # Log groups use default encryption and short retention. Both are sample scope.
+        - rule_id: 'CKV_AWS_158'
+          path: 'terraform/main.tf'
+          reason: 'Default log encryption; a CMK per log group is out of scope for the sample'
+        - rule_id: 'CKV_AWS_158'
+          path: 'terraform/codify.tf'
+          reason: 'Default log encryption; a CMK per log group is out of scope for the sample'
+        - rule_id: 'CKV_AWS_158'
+          path: 'terraform/gates.tf'
+          reason: 'Default log encryption; a CMK per log group is out of scope for the sample'
+        - rule_id: 'CKV_AWS_158'
+          path: 'terraform/stepfunctions.tf'
+          reason: 'Default log encryption; a CMK per log group is out of scope for the sample'
+        - rule_id: 'terraform.aws.security.aws-cloudwatch-log-group-unencrypted.aws-cloudwatch-log-group-unencrypted'
+          path: 'terraform/main.tf'
+          reason: 'Duplicate of CKV_AWS_158'
+        - rule_id: 'terraform.aws.security.aws-cloudwatch-log-group-unencrypted.aws-cloudwatch-log-group-unencrypted'
+          path: 'terraform/codify.tf'
+          reason: 'Duplicate of CKV_AWS_158'
+        - rule_id: 'terraform.aws.security.aws-cloudwatch-log-group-unencrypted.aws-cloudwatch-log-group-unencrypted'
+          path: 'terraform/gates.tf'
+          reason: 'Duplicate of CKV_AWS_158'
+        - rule_id: 'terraform.aws.security.aws-cloudwatch-log-group-unencrypted.aws-cloudwatch-log-group-unencrypted'
+          path: 'terraform/stepfunctions.tf'
+          reason: 'Duplicate of CKV_AWS_158'
+        - rule_id: 'CKV_AWS_338'
+          path: 'terraform/main.tf'
+          reason: 'Short log retention is deliberate for a sample; production should raise this'
+        - rule_id: 'CKV_AWS_338'
+          path: 'terraform/codify.tf'
+          reason: 'Short log retention is deliberate for a sample; production should raise this'
+        - rule_id: 'CKV_AWS_338'
+          path: 'terraform/gates.tf'
+          reason: 'Short log retention is deliberate for a sample; production should raise this'
+        - rule_id: 'CKV_AWS_338'
+          path: 'terraform/stepfunctions.tf'
+          reason: 'Short log retention is deliberate for a sample; production should raise this'
+
+        # --- bandit --------------------------------------------------------
+        # B105 matches on the variable NAME. gates.py:39 is `PASS = "PASS"`, a gate verdict
+        # string. There is no credential in this module.
+        - rule_id: 'B105'
+          path: 'src/driftcode/gates.py'
+          reason: 'False positive: PASS = "PASS" is a gate verdict constant, not a password'
+
+        # B606 flags starting a process without a shell - which is the security property here,
+        # not the risk. tf_guard validates an argv and then os.execv's it: no shell means no
+        # shell injection, and execv replaces the process so there is no window in which a
+        # different command could be substituted. Running this THROUGH a shell is what would
+        # deserve a finding.
+        - rule_id: 'B606'
+          path: 'src/driftcode/detect/tf_guard.py'
+          reason: 'Intended: os.execv with no shell is the control - no shell injection, no substitution window'
+
+        # Same underlying observation as the semgrep urllib rule, now guarded by an explicit
+        # https scheme assertion in urllib_transport.
+        - rule_id: 'B310'
+          path: 'src/driftcode/mcp/github.py'
+          reason: 'Addressed: transport asserts an https scheme before urlopen; see test_the_transport_refuses_a_file_url'
+
+        # B108 looks for insecure temp file usage. Both hits are string literals in tests that
+        # never touch the filesystem: one passes Path("/tmp") as a session root to assert a
+        # tool is refused, the other has "/tmp/p.tfplan" inside an argv list being validated by
+        # the guard. No file is created or read at either site.
+        - rule_id: 'B108'
+          path: 'tests/test_mcp_server.py'
+          reason: 'False positive: Path("/tmp") is a session-root literal in a refusal assertion; no file is created'
+        - rule_id: 'B108'
+          path: 'tests/test_tf_guard.py'
+          reason: 'False positive: "/tmp/p.tfplan" is an argv literal under validation; no file is created'
+
+        # --- known gaps, deliberately NOT called inapplicable ------------------
+        # Real and worth closing before production use. This one touches live behaviour -
+        # enabling tracing needs an X-Ray grant on the orchestrator role - so it is not a
+        # configuration-only edit and it is not done here.
+        #
+        # CKV_AWS_26 (unencrypted alert topic) used to sit here. The topic is now encrypted with
+        # the AWS-managed SNS key by default and the publisher carries a ViaService-scoped KMS
+        # grant, so the check passes and the suppression is gone rather than reworded.
+        - rule_id: 'CKV_AWS_284'
+          path: 'terraform/stepfunctions.tf'
+          reason: 'KNOWN GAP: X-Ray tracing is off. Enable with an xray grant on the orchestrator role.'

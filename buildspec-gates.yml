@@ -1,0 +1,121 @@
+version: 0.2
+
+# Gate stage: scan the codified branch, in a worker that holds no write credential.
+#
+# This stage exists because of a privilege split, not for convenience. Gate B is a
+# `terraform plan` against the branch, which cannot run without reading Terraform state - and
+# state names every resource in the estate. The worker that opened the pull request holds a
+# repository write credential, so giving it state access too would produce the single most
+# useful credential in the system to compromise. Instead:
+#
+#   codify    model + write credential, no state   -> branch, PR marked gates-pending
+#   gates     state and estate read, NO write cred -> this: a verdict, written to S3
+#   finalize  write credential, no state           -> relabel and comment
+#
+# Nothing ever holds both state access and a write credential.
+#
+# The clone here uses a READ-ONLY credential, distinct from the one codify pushes with. That is
+# the point of the separation, and reusing codify's token would quietly undo it.
+
+env:
+  variables:
+    TERRAFORM_VERSION: "1.9.8"
+    TF_LOCK_TIMEOUT: "120s"
+  secrets-manager:
+    # Read-only. This stage clones and plans; it never pushes.
+    GIT_TOKEN: "${GIT_CREDENTIAL_SECRET_ID}:token"
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.12
+    commands:
+      - curl -sS -o /tmp/tf.zip "https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip"
+      - unzip -q -o /tmp/tf.zip -d /usr/local/bin
+      - python3 -m venv /opt/driftcode
+      - /opt/driftcode/bin/pip install --quiet --upgrade pip
+      - /opt/driftcode/bin/pip install --quiet -e '.[gates,aws]'
+      - ln -sf /opt/driftcode/bin/drift-* /opt/driftcode/bin/checkov /usr/local/bin/
+
+  pre_build:
+    commands:
+      # Two checkouts of the same repository: the base the branch was cut from, and the branch.
+      # Every gate verdict is the difference between them, never an absolute count - a real
+      # estate carries pre-existing findings this change did not cause, and a gate that fails on
+      # those fails every run and gets switched off.
+      - git clone --quiet "https://oauth2:${GIT_TOKEN}@${TARGET_REPO_URL}" /tmp/branch
+      - git -C /tmp/branch checkout --quiet "${DRIFT_BRANCH}"
+      - export BASE_COMMIT="$(git -C /tmp/branch rev-parse "${DRIFT_BRANCH}^")"
+      - git clone --quiet "https://oauth2:${GIT_TOKEN}@${TARGET_REPO_URL}" /tmp/base
+      - git -C /tmp/base checkout --quiet "${BASE_COMMIT}"
+      - echo "comparing ${DRIFT_BRANCH} against its parent ${BASE_COMMIT}"
+
+  build:
+    commands:
+      # --- Gate B: the branch plan, variables resolved -----------------------
+      # A plan resolves values through the workspace's variable context, so a dangerous value
+      # trips this whether it is a literal or arrives via var/tfvars. Locking stays on for the
+      # same reason detection keeps it: an unlocked read can be torn.
+      - drift-tf-guard -chdir="/tmp/base/${TF_WORKING_DIR}" init -input=false -no-color
+      - |
+        drift-tf-guard -chdir="/tmp/base/${TF_WORKING_DIR}" plan \
+          -lock-timeout="${TF_LOCK_TIMEOUT}" -input=false -no-color -out=/tmp/base.tfplan 2>&1 | tail -3
+      - drift-tf-guard -chdir="/tmp/base/${TF_WORKING_DIR}" show -json /tmp/base.tfplan > /tmp/base.plan.json
+      - checkov -f /tmp/base.plan.json --output json --quiet --soft-fail > /tmp/gateb-before.json || true
+
+      - drift-tf-guard -chdir="/tmp/branch/${TF_WORKING_DIR}" init -input=false -no-color
+      - |
+        drift-tf-guard -chdir="/tmp/branch/${TF_WORKING_DIR}" plan \
+          -lock-timeout="${TF_LOCK_TIMEOUT}" -input=false -no-color -out=/tmp/branch.tfplan 2>&1 | tail -3
+      - drift-tf-guard -chdir="/tmp/branch/${TF_WORKING_DIR}" show -json /tmp/branch.tfplan > /tmp/branch.plan.json
+      - checkov -f /tmp/branch.plan.json --output json --quiet --soft-fail > /tmp/gateb-after.json || true
+
+      # --- Gate C: the source directory, no plan involved --------------------
+      # Mandatory, not supplementary. A plan-based scan is blinded by ignore_changes - the very
+      # mechanism that holds a merge window open - so the one configuration where a freeze is in
+      # play is the one where Gate B cannot be trusted alone.
+      - checkov -d /tmp/base --output json --quiet --soft-fail > /tmp/gatec-before.json || true
+      - checkov -d /tmp/branch --output json --quiet --soft-fail > /tmp/gatec-after.json || true
+
+      # --- the verdict -------------------------------------------------------
+      # Non-zero on a failing gate, captured rather than fatal: the verdict is the artifact, and
+      # the finalize step routes on it. A build failure here would look like the gates not
+      # having run, which is a different and more dangerous state.
+      - |
+        drift-gates \
+          --plan-before /tmp/gateb-before.json --plan-after /tmp/gateb-after.json \
+          --source-before /tmp/gatec-before.json --source-after /tmp/gatec-after.json \
+          --out /tmp/gates.json || true
+
+  post_build:
+    commands:
+      - |
+        /opt/driftcode/bin/python -c "
+        import json, pathlib
+        p = pathlib.Path('/tmp/gates.json')
+        if not p.is_file():
+            print('NO VERDICT PRODUCED - the pull request stays gates-pending')
+            raise SystemExit(1)
+        g = json.loads(p.read_text())
+        print('verdict:', g['verdict'])
+        for name, gate in g['gates'].items():
+            print(' ', gate['verdict'], name)
+            for f in gate['introduced']:
+                print('     introduced:', f['check_id'], 'on', f['resource'])
+        "
+      - cp /tmp/gates.json "${CODEBUILD_SRC_DIR}/" 2>/dev/null || true
+      - cp /tmp/gateb-*.json /tmp/gatec-*.json "${CODEBUILD_SRC_DIR}/" 2>/dev/null || true
+      # Always leave something behind, so a failed run is distinguishable from a lost one.
+      - |
+        if [ ! -f "${CODEBUILD_SRC_DIR}/gates.json" ]; then
+          echo '{"verdict":"FAIL","gates":{},"introduced":[],"counts":{"gates_failed":2,"introduced":0},"note":"the gate stage did not produce a verdict"}' > "${CODEBUILD_SRC_DIR}/gates.json"
+        fi
+
+artifacts:
+  files:
+    - gates.json
+    - gateb-before.json
+    - gateb-after.json
+    - gatec-before.json
+    - gatec-after.json
+  name: drift-gates-$(date +%Y%m%d-%H%M%S)

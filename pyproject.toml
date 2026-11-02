@@ -1,0 +1,48 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "driftcode"
+version = "0.1.0"
+description = "Detect valid Terraform drift and codify it back into source as a reviewable pull request"
+requires-python = ">=3.9"
+# No runtime dependencies, on purpose. The detection stage runs in a CodeBuild worker
+# that may be a bare image, and every module here is a pure function over plan JSON.
+dependencies = []
+
+[project.optional-dependencies]
+# Only the security gates need third-party code, and they run as separate steps.
+gates = ["checkov>=3"]
+# The observation ledger's DynamoDB adapter. Imported lazily, so the rest of the package
+# keeps working without it - and without a ledger every drift reads as a first observation
+# and suppresses, which is the correct fail-closed behaviour.
+# boto3 for the observation ledger; cryptography for GitHub App RS256 signing, which the
+# standard library cannot do. Both belong to the write/orchestration path, so the detection
+# modules keep working with no third-party code at all.
+aws = ["boto3>=1.34", "cryptography>=42"]
+dev = ["pytest>=7"]
+
+[project.scripts]
+drift-reconcile = "driftcode.detect.reconcile:main"
+drift-gate-a = "driftcode.detect.gate_a:main"
+drift-tf-guard = "driftcode.detect.tf_guard:main"
+drift-authorize = "driftcode.authorize:main"
+drift-verify = "driftcode.verify:main"
+drift-prompt = "driftcode.prompt:main"
+drift-project = "driftcode.project:main"
+drift-mcp-server = "driftcode.mcp.cli:main"
+drift-codify = "driftcode.codify:main"
+drift-gates = "driftcode.gates:main"
+drift-finalize = "driftcode.finalize:main"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# Import the installed package rather than manipulating sys.path.
+addopts = "-q"

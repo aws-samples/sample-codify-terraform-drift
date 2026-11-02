@@ -1,0 +1,134 @@
+version: 0.2
+
+# Codify stage of the drift-to-code pattern. Runs after detection, on its artifacts.
+#
+# Detection decided WHAT may change. This stage produces the change and gets it in front of a
+# human. The ordering below is the security argument, not a convenience:
+#
+#   1. clone the target at the commit detection reconciled against - not at HEAD, or the edit
+#      lands on a tree that was never the one examined
+#   2. run the agent, which can only stage, and only within the authorized set
+#   3. verify the staged change against the work order; a mismatch stops here with no PR
+#   4. publish, marked gates-pending and do-not-merge
+#
+# The gates do NOT run here. Gate B is a branch plan, which cannot run without reading Terraform
+# state, and this worker holds a repository write credential - giving it state access too would
+# produce the single most useful credential in the system to compromise. The gate stage runs
+# afterwards with state access and no write credential; the finalize step applies its verdict.
+#
+# This worker is the only place in the pipeline where a model and a write credential meet. It
+# is therefore the highest-value target in the system, and is deliberately given no write
+# access to the AWS estate at all: its AWS permissions are bedrock:InvokeModel and reading
+# detection's artifacts. Everything it can damage, it can only damage through a pull request a
+# human has to merge.
+
+env:
+  variables:
+    TERRAFORM_VERSION: "1.9.8"
+    TF_LOCK_TIMEOUT: "120s"
+    # TARGET_REPO_URL, TARGET_REPO_SLUG, TF_WORKING_DIR, DRIFT_WORKSPACE_ID, DRIFT_MODEL_ID
+    # and DRIFT_ARTIFACTS_BUCKET come from the project's environment. Not defaulted here:
+    # CodeBuild resolves project variables over buildspec ones, so a default would be dead
+    # text that reads as configuration.
+  exported-variables:
+    # The branch the gate stage must scan, and whether anything was published at all.
+    - DRIFT_BRANCH
+    - DRIFT_PUBLISHED
+  secrets-manager:
+    # The write credential. This stage needs push access, unlike detection which only clones.
+    GIT_TOKEN: "${GIT_CREDENTIAL_SECRET_ID}:token"
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.12
+    commands:
+      - curl -sS -o /tmp/tf.zip "https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip"
+      - unzip -q -o /tmp/tf.zip -d /usr/local/bin
+      - python3 -m venv /opt/driftcode
+      - /opt/driftcode/bin/pip install --quiet --upgrade pip
+      - /opt/driftcode/bin/pip install --quiet -e '.[gates,aws]'
+      - ln -sf /opt/driftcode/bin/drift-* /opt/driftcode/bin/checkov /usr/local/bin/
+
+  pre_build:
+    commands:
+      # --- detection's output ------------------------------------------------
+      # Fetched from the artifact store rather than recomputed. Recomputing would risk
+      # codifying drift that a *different* reconciliation authorized.
+      - aws s3 cp "s3://${DRIFT_ARTIFACTS_BUCKET}/${DETECTION_ARTIFACT_KEY}" /tmp/detection.zip
+      - unzip -o -q /tmp/detection.zip -d /tmp/detection
+      - |
+        /opt/driftcode/bin/python -c "
+        import json,sys
+        a=json.load(open('/tmp/detection/authorization.json'))
+        print(f\"work orders: {a['counts']['work_orders']}, escalated: {a['counts']['escalate']}, suppressed: {a['counts']['suppress']}\")
+        sys.exit(0)"
+      - export DEPLOYED_COMMIT="$(cat /tmp/detection/target-head.txt)"
+      - echo "reconciled against ${DEPLOYED_COMMIT}"
+
+      # --- clone at the commit detection examined ----------------------------
+      # A shallow clone of a branch would give HEAD, which may have moved. The work order's
+      # line numbers describe the tree detection read, so that is the tree to edit.
+      - git clone --quiet "https://oauth2:${GIT_TOKEN}@${TARGET_REPO_URL}" /tmp/target
+      - git -C /tmp/target checkout --quiet "${DEPLOYED_COMMIT}"
+
+  build:
+    commands:
+      # --- the agent drafts, and the change is verified ----------------------
+      # drift-codify runs the agent against the authorized set, computes the diff itself,
+      # verifies it against the work order, and publishes only on accept. A rejected diff
+      # exits non-zero here and never reaches a pull request.
+      - |
+        drift-codify \
+          --authorization /tmp/detection/authorization.json \
+          --repo-root /tmp/target \
+          --repo "${TARGET_REPO_SLUG}" \
+          --workspace-id "${DRIFT_WORKSPACE_ID}" \
+          --base-branch "${TARGET_REPO_REF:-main}" \
+          --base-sha "${DEPLOYED_COMMIT}" \
+          --deployed-commit-file /tmp/detection/target-head.txt \
+          --model-id "${DRIFT_MODEL_ID}" \
+          --region "${AWS_REGION}" \
+          --out /tmp/codify.json
+      # The pull request opens marked gates-pending. The gates cannot run here: Gate B is a
+      # branch plan, which needs Terraform state, and this worker holds a write credential and
+      # is therefore deliberately denied that state. The gate stage runs next, and the finalize
+      # step applies its verdict. See buildspec-gates.yml.
+
+  post_build:
+    commands:
+      # Runs whether or not build succeeded, so an escalation is reported rather than lost.
+      - |
+        /opt/driftcode/bin/python -c "
+        import json, pathlib
+        p = pathlib.Path('/tmp/codify.json')
+        if not p.is_file():
+            print('codify stage did not produce a result'); raise SystemExit(0)
+        d = json.loads(p.read_text())
+        print('outcomes:', json.dumps(d['counts'], indent=2))
+        for r in d['results']:
+            print(' ', r['resource_address'], '->', r['outcome'])
+        "
+      - |
+        export DRIFT_BRANCH="$(/opt/driftcode/bin/python -c "
+        import json, pathlib
+        p = pathlib.Path('/tmp/codify.json')
+        if not p.is_file():
+            print(''); raise SystemExit
+        published = [r for r in json.loads(p.read_text())['results'] if r['outcome'] == 'published']
+        print(published[0]['branch'] if published else '')")"
+      - export DRIFT_PUBLISHED="$([ -n "${DRIFT_BRANCH}" ] && echo true || echo false)"
+      - echo "published=${DRIFT_PUBLISHED} branch=${DRIFT_BRANCH}"
+      - cp /tmp/codify.json "${CODEBUILD_SRC_DIR}/" 2>/dev/null || true
+      # Always leave a record, so a failed run is distinguishable from a lost one.
+      - |
+        if [ ! -f "${CODEBUILD_SRC_DIR}/codify.json" ]; then
+          echo '{"results":[],"counts":{},"note":"the codify stage did not produce a result"}' > "${CODEBUILD_SRC_DIR}/codify.json"
+        fi
+
+artifacts:
+  # The codify record carries the agent transcript and the verification result. Treat as
+  # sensitive: the transcript quotes live values read from the estate.
+  files:
+    - codify.json
+  name: drift-codify-$(date +%Y%m%d-%H%M%S)
