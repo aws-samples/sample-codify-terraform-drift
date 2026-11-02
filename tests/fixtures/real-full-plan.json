@@ -1,0 +1,3210 @@
+{
+ "applyable": true,
+ "complete": true,
+ "errored": false,
+ "format_version": "1.2",
+ "planned_values": {
+  "root_module": {
+   "child_modules": [
+    {
+     "address": "module.compute",
+     "resources": [
+      {
+       "address": "module.compute.aws_autoscaling_group.app",
+       "mode": "managed",
+       "name": "app",
+       "provider_name": "registry.terraform.io/hashicorp/aws",
+       "schema_version": 1,
+       "sensitive_values": {
+        "availability_zone_distribution": [
+         {}
+        ],
+        "availability_zones": [
+         false
+        ],
+        "capacity_reservation_specification": [
+         {
+          "capacity_reservation_target": []
+         }
+        ],
+        "enabled_metrics": [],
+        "initial_lifecycle_hook": [],
+        "instance_maintenance_policy": [],
+        "instance_refresh": [],
+        "launch_template": [
+         {}
+        ],
+        "load_balancers": [],
+        "mixed_instances_policy": [],
+        "suspended_processes": [],
+        "tag": [
+         {}
+        ],
+        "target_group_arns": [],
+        "termination_policies": [],
+        "traffic_source": [],
+        "vpc_zone_identifier": [
+         false
+        ],
+        "warm_pool": []
+       },
+       "type": "aws_autoscaling_group",
+       "values": {
+        "arn": "arn:aws:REDACTED",
+        "availability_zone_distribution": [
+         {
+          "capacity_distribution_strategy": "balanced-best-effort"
+         }
+        ],
+        "availability_zones": [
+         "us-east-1a"
+        ],
+        "capacity_rebalance": false,
+        "capacity_reservation_specification": [
+         {
+          "capacity_reservation_preference": "default",
+          "capacity_reservation_target": []
+         }
+        ],
+        "context": "",
+        "default_cooldown": 300,
+        "default_instance_warmup": 0,
+        "desired_capacity": 2,
+        "desired_capacity_type": "",
+        "enabled_metrics": [],
+        "force_delete": false,
+        "force_delete_warm_pool": false,
+        "health_check_grace_period": 300,
+        "health_check_type": "EC2",
+        "id": "drift-demo-dev-app-asg",
+        "ignore_failed_scaling_activities": false,
+        "initial_lifecycle_hook": [],
+        "instance_maintenance_policy": [],
+        "instance_refresh": [],
+        "launch_configuration": "",
+        "launch_template": [
+         {
+          "id": "lt-00000000000000000",
+          "name": "drift-demo-app-00000000000000000000000000",
+          "version": "$Latest"
+         }
+        ],
+        "load_balancers": [],
+        "max_instance_lifetime": 0,
+        "max_size": 4,
+        "metrics_granularity": "1Minute",
+        "min_elb_capacity": null,
+        "min_size": 1,
+        "mixed_instances_policy": [],
+        "name": "drift-demo-dev-app-asg",
+        "name_prefix": "",
+        "placement_group": "",
+        "predicted_capacity": 0,
+        "protect_from_scale_in": false,
+        "service_linked_role_arn": "arn:aws:REDACTED",
+        "suspended_processes": [],
+        "tag": [
+         {
+          "key": "Name",
+          "propagate_at_launch": true,
+          "value": "drift-demo-app"
+         }
+        ],
+        "target_group_arns": [],
+        "termination_policies": [],
+        "timeouts": null,
+        "traffic_source": [],
+        "vpc_zone_identifier": [
+         "subnet-00000000000000000"
+        ],
+        "wait_for_capacity_timeout": "10m",
+        "wait_for_elb_capacity": null,
+        "warm_pool": [],
+        "warm_pool_size": 0
+       }
+      },
+      {
+       "address": "module.compute.aws_launch_template.app",
+       "mode": "managed",
+       "name": "app",
+       "provider_name": "registry.terraform.io/hashicorp/aws",
+       "schema_version": 0,
+       "sensitive_values": {
+        "block_device_mappings": [],
+        "capacity_reservation_specification": [],
+        "cpu_options": [],
+        "credit_specification": [],
+        "elastic_gpu_specifications": [],
+        "elastic_inference_accelerator": [],
+        "enclave_options": [],
+        "hibernation_options": [],
+        "iam_instance_profile": [],
+        "instance_market_options": [],
+        "instance_requirements": [],
+        "license_specification": [],
+        "maintenance_options": [],
+        "metadata_options": [],
+        "monitoring": [],
+        "network_interfaces": [],
+        "placement": [],
+        "private_dns_name_options": [],
+        "security_group_names": [],
+        "tag_specifications": [
+         {
+          "tags": {}
+         }
+        ],
+        "tags": {},
+        "tags_all": {},
+        "vpc_security_group_ids": [
+         false
+        ]
+       },
+       "type": "aws_launch_template",
+       "values": {
+        "arn": "arn:aws:REDACTED",
+        "block_device_mappings": [],
+        "capacity_reservation_specification": [],
+        "cpu_options": [],
+        "credit_specification": [],
+        "default_version": 2,
+        "description": null,
+        "disable_api_stop": false,
+        "disable_api_termination": false,
+        "ebs_optimized": "",
+        "elastic_gpu_specifications": [],
+        "elastic_inference_accelerator": [],
+        "enclave_options": [],
+        "hibernation_options": [],
+        "iam_instance_profile": [],
+        "id": "lt-00000000000000000",
+        "image_id": "ami-00000000000000000",
+        "instance_initiated_shutdown_behavior": "",
+        "instance_market_options": [],
+        "instance_requirements": [],
+        "instance_type": "t3.micro",
+        "kernel_id": "",
+        "key_name": "",
+        "license_specification": [],
+        "maintenance_options": [],
+        "metadata_options": [],
+        "monitoring": [],
+        "name": "drift-demo-app-00000000000000000000000000",
+        "name_prefix": "drift-demo-app-",
+        "network_interfaces": [],
+        "placement": [],
+        "private_dns_name_options": [],
+        "ram_disk_id": "",
+        "security_group_names": [],
+        "tag_specifications": [
+         {
+          "resource_type": "instance",
+          "tags": {
+           "Environment": "dev",
+           "ManagedBy": "terraform",
+           "Name": "drift-demo-app"
+          }
+         }
+        ],
+        "tags": {},
+        "tags_all": {
+         "Environment": "dev",
+         "ManagedBy": "terraform",
+         "Project": "drift-demo"
+        },
+        "update_default_version": null,
+        "user_data": "",
+        "vpc_security_group_ids": [
+         "sg-00000000000000000"
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "address": "module.iam",
+     "resources": [
+      {
+       "address": "module.iam.aws_iam_role.app_role",
+       "mode": "managed",
+       "name": "app_role",
+       "provider_name": "registry.terraform.io/hashicorp/aws",
+       "schema_version": 0,
+       "sensitive_values": {
+        "inline_policy": [
+         {}
+        ],
+        "managed_policy_arns": [],
+        "tags": {},
+        "tags_all": {}
+       },
+       "type": "aws_iam_role",
+       "values": {
+        "arn": "arn:aws:REDACTED",
+        "assume_role_policy": "{\"Statement\":[{\"Action\":\"sts:AssumeRole\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"lambda.amazonaws.com\"}}],\"Version\":\"2012-10-17\"}",
+        "create_date": "2026-09-14T07:19:36Z",
+        "description": "",
+        "force_detach_policies": false,
+        "id": "drift-demo-dev-app-role",
+        "inline_policy": [
+         {
+          "name": "drift-demo-app-logging-policy",
+          "policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Action\":[\"logs:CreateLogGroup\",\"logs:CreateLogStream\",\"logs:PutLogEvents\"],\"Effect\":\"Allow\",\"Resource\":\"arn:aws:REDACTED\"}]}"
+         }
+        ],
+        "managed_policy_arns": [],
+        "max_session_duration": 3600,
+        "name": "drift-demo-dev-app-role",
+        "name_prefix": "",
+        "path": "/",
+        "permissions_boundary": "",
+        "tags": {
+         "Environment": "dev",
+         "ManagedBy": "terraform"
+        },
+        "tags_all": {
+         "Environment": "dev",
+         "ManagedBy": "terraform",
+         "Project": "drift-demo"
+        },
+        "unique_id": "AROAREDACTEDROLEID"
+       }
+      },
+      {
+       "address": "module.iam.aws_iam_role_policy.app_logging",
+       "mode": "managed",
+       "name": "app_logging",
+       "provider_name": "registry.terraform.io/hashicorp/aws",
+       "schema_version": 0,
+       "sensitive_values": {},
+       "type": "aws_iam_role_policy",
+       "values": {
+        "id": "drift-demo-dev-app-role:drift-demo-app-logging-policy",
+        "name": "drift-demo-app-logging-policy",
+        "name_prefix": "",
+        "policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Action\":[\"logs:CreateLogGroup\",\"logs:CreateLogStream\",\"logs:PutLogEvents\"],\"Effect\":\"Allow\",\"Resource\":\"arn:aws:REDACTED\"}]}",
+        "role": "drift-demo-dev-app-role"
+       }
+      }
+     ]
+    },
+    {
+     "address": "module.networking",
+     "resources": [
+      {
+       "address": "module.networking.aws_security_group.web_prod",
+       "mode": "managed",
+       "name": "web_prod",
+       "provider_name": "registry.terraform.io/hashicorp/aws",
+       "schema_version": 1,
+       "sensitive_values": {
+        "egress": [
+         {
+          "cidr_blocks": [
+           false
+          ],
+          "ipv6_cidr_blocks": [],
+          "prefix_list_ids": [],
+          "security_groups": []
+         }
+        ],
+        "ingress": [
+         {
+          "cidr_blocks": [
+           false
+          ],
+          "ipv6_cidr_blocks": [],
+          "prefix_list_ids": [],
+          "security_groups": []
+         }
+        ],
+        "tags": {},
+        "tags_all": {}
+       },
+       "type": "aws_security_group",
+       "values": {
+        "arn": "arn:aws:REDACTED",
+        "description": "Production web traffic - HTTPS only",
+        "egress": [
+         {
+          "cidr_blocks": [
+           "0.0.0.0/0"
+          ],
+          "description": "All outbound",
+          "from_port": 0,
+          "ipv6_cidr_blocks": [],
+          "prefix_list_ids": [],
+          "protocol": "-1",
+          "security_groups": [],
+          "self": false,
+          "to_port": 0
+         }
+        ],
+        "id": "sg-00000000000000000",
+        "ingress": [
+         {
+          "cidr_blocks": [
+           "10.0.0.0/8"
+          ],
+          "description": "HTTPS from internal network",
+          "from_port": 443,
+          "ipv6_cidr_blocks": [],
+          "prefix_list_ids": [],
+          "protocol": "tcp",
+          "security_groups": [],
+          "self": false,
+          "to_port": 443
+         }
+        ],
+        "name": "drift-demo-web-prod-sg",
+        "name_prefix": "",
+        "owner_id": "000000000000",
+        "revoke_rules_on_delete": false,
+        "tags": {
+         "Environment": "dev",
+         "ManagedBy": "terraform",
+         "Name": "drift-demo-web-prod-sg"
+        },
+        "tags_all": {
+         "Environment": "dev",
+         "ManagedBy": "terraform",
+         "Name": "drift-demo-web-prod-sg",
+         "Project": "drift-demo"
+        },
+        "timeouts": null,
+        "vpc_id": "vpc-00000000000000000"
+       }
+      },
+      {
+       "address": "module.networking.aws_subnet.app",
+       "mode": "managed",
+       "name": "app",
+       "provider_name": "registry.terraform.io/hashicorp/aws",
+       "schema_version": 1,
+       "sensitive_values": {
+        "tags": {},
+        "tags_all": {}
+       },
+       "type": "aws_subnet",
+       "values": {
+        "arn": "arn:aws:REDACTED",
+        "assign_ipv6_address_on_creation": false,
+        "availability_zone": "us-east-1a",
+        "availability_zone_id": "use1-az2",
+        "cidr_block": "10.0.1.0/24",
+        "customer_owned_ipv4_pool": "",
+        "enable_dns64": false,
+        "enable_lni_at_device_index": 0,
+        "enable_resource_name_dns_a_record_on_launch": false,
+        "enable_resource_name_dns_aaaa_record_on_launch": false,
+        "id": "subnet-00000000000000000",
+        "ipv6_cidr_block": "",
+        "ipv6_cidr_block_association_id": "",
+        "ipv6_native": false,
+        "map_customer_owned_ip_on_launch": false,
+        "map_public_ip_on_launch": false,
+        "outpost_arn": "",
+        "owner_id": "000000000000",
+        "private_dns_hostname_type_on_launch": "ip-name",
+        "tags": {
+         "Environment": "dev",
+         "ManagedBy": "terraform",
+         "Name": "drift-demo-app-subnet"
+        },
+        "tags_all": {
+         "Environment": "dev",
+         "ManagedBy": "terraform",
+         "Name": "drift-demo-app-subnet",
+         "Project": "drift-demo"
+        },
+        "timeouts": null,
+        "vpc_id": "vpc-00000000000000000"
+       }
+      },
+      {
+       "address": "module.networking.aws_vpc.main",
+       "mode": "managed",
+       "name": "main",
+       "provider_name": "registry.terraform.io/hashicorp/aws",
+       "schema_version": 1,
+       "sensitive_values": {
+        "tags": {},
+        "tags_all": {}
+       },
+       "type": "aws_vpc",
+       "values": {
+        "arn": "arn:aws:REDACTED",
+        "assign_generated_ipv6_cidr_block": false,
+        "cidr_block": "10.0.0.0/16",
+        "default_network_acl_id": "acl-00000000000000000",
+        "default_route_table_id": "rtb-00000000000000000",
+        "default_security_group_id": "sg-00000000000000000",
+        "dhcp_options_id": "dopt-00000000000000000",
+        "enable_dns_hostnames": true,
+        "enable_dns_support": true,
+        "enable_network_address_usage_metrics": false,
+        "id": "vpc-00000000000000000",
+        "instance_tenancy": "default",
+        "ipv4_ipam_pool_id": null,
+        "ipv4_netmask_length": null,
+        "ipv6_association_id": "",
+        "ipv6_cidr_block": "",
+        "ipv6_cidr_block_network_border_group": "",
+        "ipv6_ipam_pool_id": "",
+        "ipv6_netmask_length": 0,
+        "main_route_table_id": "rtb-00000000000000000",
+        "owner_id": "000000000000",
+        "tags": {
+         "Environment": "dev",
+         "ManagedBy": "terraform",
+         "Name": "drift-demo-vpc"
+        },
+        "tags_all": {
+         "Environment": "dev",
+         "ManagedBy": "terraform",
+         "Name": "drift-demo-vpc",
+         "Project": "drift-demo"
+        }
+       }
+      }
+     ]
+    },
+    {
+     "address": "module.storage",
+     "resources": [
+      {
+       "address": "module.storage.aws_s3_bucket.data_bucket",
+       "mode": "managed",
+       "name": "data_bucket",
+       "provider_name": "registry.terraform.io/hashicorp/aws",
+       "schema_version": 0,
+       "sensitive_values": {
+        "cors_rule": [],
+        "grant": [
+         {
+          "permissions": [
+           false
+          ]
+         }
+        ],
+        "lifecycle_rule": [],
+        "logging": [],
+        "object_lock_configuration": [],
+        "replication_configuration": [],
+        "server_side_encryption_configuration": [
+         {
+          "rule": [
+           {
+            "apply_server_side_encryption_by_default": [
+             {}
+            ]
+           }
+          ]
+         }
+        ],
+        "tags": {},
+        "tags_all": {},
+        "versioning": [
+         {}
+        ],
+        "website": []
+       },
+       "type": "aws_s3_bucket",
+       "values": {
+        "acceleration_status": "",
+        "acl": null,
+        "arn": "arn:aws:REDACTED",
+        "bucket": "drift-demo-dev-data-000000000000",
+        "bucket_domain_name": "drift-demo-dev-data-000000000000.s3.amazonaws.com",
+        "bucket_prefix": "",
+        "bucket_regional_domain_name": "drift-demo-dev-data-000000000000.s3.us-east-1.amazonaws.com",
+        "cors_rule": [],
+        "force_destroy": false,
+        "grant": [
+         {
+          "id": "0000000000000000000000000000000000000000000000000000000000000000",
+          "permissions": [
+           "FULL_CONTROL"
+          ],
+          "type": "CanonicalUser",
+          "uri": ""
+         }
+        ],
+        "hosted_zone_id": "Z3AQBSTGFYJSTF",
+        "id": "drift-demo-dev-data-000000000000",
+        "lifecycle_rule": [],
+        "logging": [],
+        "object_lock_configuration": [],
+        "object_lock_enabled": false,
+        "policy": "",
+        "region": "us-east-1",
+        "replication_configuration": [],
+        "request_payer": "BucketOwner",
+        "server_side_encryption_configuration": [
+         {
+          "rule": [
+           {
+            "apply_server_side_encryption_by_default": [
+             {
+              "kms_master_key_id": "",
+              "sse_algorithm": "AES256"
+             }
+            ],
+            "bucket_key_enabled": false
+           }
+          ]
+         }
+        ],
+        "tags": {
+         "CostCenter": "engineering-dev",
+         "Environment": "dev",
+         "ManagedBy": "terraform",
+         "Name": "drift-demo-data-bucket",
+         "Project": "drift-demo"
+        },
+        "tags_all": {
+         "CostCenter": "engineering-dev",
+         "Environment": "dev",
+         "ManagedBy": "terraform",
+         "Name": "drift-demo-data-bucket",
+         "Project": "drift-demo"
+        },
+        "timeouts": null,
+        "versioning": [
+         {
+          "enabled": true,
+          "mfa_delete": false
+         }
+        ],
+        "website": [],
+        "website_domain": null,
+        "website_endpoint": null
+       }
+      },
+      {
+       "address": "module.storage.aws_s3_bucket_versioning.data_bucket",
+       "mode": "managed",
+       "name": "data_bucket",
+       "provider_name": "registry.terraform.io/hashicorp/aws",
+       "schema_version": 0,
+       "sensitive_values": {
+        "versioning_configuration": [
+         {}
+        ]
+       },
+       "type": "aws_s3_bucket_versioning",
+       "values": {
+        "bucket": "drift-demo-dev-data-000000000000",
+        "expected_bucket_owner": "",
+        "id": "drift-demo-dev-data-000000000000",
+        "mfa": null,
+        "versioning_configuration": [
+         {
+          "mfa_delete": "",
+          "status": "Enabled"
+         }
+        ]
+       }
+      }
+     ]
+    }
+   ]
+  }
+ },
+ "prior_state": {
+  "format_version": "1.0",
+  "terraform_version": "1.15.1",
+  "values": {
+   "root_module": {
+    "child_modules": [
+     {
+      "address": "module.compute",
+      "resources": [
+       {
+        "address": "module.compute.aws_autoscaling_group.app",
+        "depends_on": [
+         "module.compute.aws_launch_template.app",
+         "module.networking.aws_security_group.web_prod",
+         "module.networking.aws_subnet.app",
+         "module.networking.aws_vpc.main",
+         "module.networking.data.aws_region.current"
+        ],
+        "mode": "managed",
+        "name": "app",
+        "provider_name": "registry.terraform.io/hashicorp/aws",
+        "schema_version": 1,
+        "sensitive_values": {
+         "availability_zone_distribution": [
+          {}
+         ],
+         "availability_zones": [
+          false
+         ],
+         "capacity_reservation_specification": [
+          {
+           "capacity_reservation_target": []
+          }
+         ],
+         "enabled_metrics": [],
+         "initial_lifecycle_hook": [],
+         "instance_maintenance_policy": [],
+         "instance_refresh": [],
+         "launch_template": [
+          {}
+         ],
+         "load_balancers": [],
+         "mixed_instances_policy": [],
+         "suspended_processes": [],
+         "tag": [
+          {}
+         ],
+         "target_group_arns": [],
+         "termination_policies": [],
+         "traffic_source": [],
+         "vpc_zone_identifier": [
+          false
+         ],
+         "warm_pool": []
+        },
+        "type": "aws_autoscaling_group",
+        "values": {
+         "arn": "arn:aws:REDACTED",
+         "availability_zone_distribution": [
+          {
+           "capacity_distribution_strategy": "balanced-best-effort"
+          }
+         ],
+         "availability_zones": [
+          "us-east-1a"
+         ],
+         "capacity_rebalance": false,
+         "capacity_reservation_specification": [
+          {
+           "capacity_reservation_preference": "default",
+           "capacity_reservation_target": []
+          }
+         ],
+         "context": "",
+         "default_cooldown": 300,
+         "default_instance_warmup": 0,
+         "desired_capacity": 2,
+         "desired_capacity_type": "",
+         "enabled_metrics": [],
+         "force_delete": false,
+         "force_delete_warm_pool": false,
+         "health_check_grace_period": 300,
+         "health_check_type": "EC2",
+         "id": "drift-demo-dev-app-asg",
+         "ignore_failed_scaling_activities": false,
+         "initial_lifecycle_hook": [],
+         "instance_maintenance_policy": [],
+         "instance_refresh": [],
+         "launch_configuration": "",
+         "launch_template": [
+          {
+           "id": "lt-00000000000000000",
+           "name": "drift-demo-app-00000000000000000000000000",
+           "version": "$Latest"
+          }
+         ],
+         "load_balancers": [],
+         "max_instance_lifetime": 0,
+         "max_size": 4,
+         "metrics_granularity": "1Minute",
+         "min_elb_capacity": null,
+         "min_size": 1,
+         "mixed_instances_policy": [],
+         "name": "drift-demo-dev-app-asg",
+         "name_prefix": "",
+         "placement_group": "",
+         "predicted_capacity": 0,
+         "protect_from_scale_in": false,
+         "service_linked_role_arn": "arn:aws:REDACTED",
+         "suspended_processes": [],
+         "tag": [
+          {
+           "key": "Name",
+           "propagate_at_launch": true,
+           "value": "drift-demo-app"
+          }
+         ],
+         "target_group_arns": [],
+         "termination_policies": [],
+         "timeouts": null,
+         "traffic_source": [],
+         "vpc_zone_identifier": [
+          "subnet-00000000000000000"
+         ],
+         "wait_for_capacity_timeout": "10m",
+         "wait_for_elb_capacity": null,
+         "warm_pool": [],
+         "warm_pool_size": 0
+        }
+       },
+       {
+        "address": "module.compute.aws_launch_template.app",
+        "depends_on": [
+         "module.networking.aws_security_group.web_prod",
+         "module.networking.aws_vpc.main"
+        ],
+        "mode": "managed",
+        "name": "app",
+        "provider_name": "registry.terraform.io/hashicorp/aws",
+        "schema_version": 0,
+        "sensitive_values": {
+         "block_device_mappings": [],
+         "capacity_reservation_specification": [],
+         "cpu_options": [],
+         "credit_specification": [],
+         "elastic_gpu_specifications": [],
+         "elastic_inference_accelerator": [],
+         "enclave_options": [],
+         "hibernation_options": [],
+         "iam_instance_profile": [],
+         "instance_market_options": [],
+         "instance_requirements": [],
+         "license_specification": [],
+         "maintenance_options": [],
+         "metadata_options": [],
+         "monitoring": [],
+         "network_interfaces": [],
+         "placement": [],
+         "private_dns_name_options": [],
+         "security_group_names": [],
+         "tag_specifications": [
+          {
+           "tags": {}
+          }
+         ],
+         "tags": {},
+         "tags_all": {},
+         "vpc_security_group_ids": [
+          false
+         ]
+        },
+        "type": "aws_launch_template",
+        "values": {
+         "arn": "arn:aws:REDACTED",
+         "block_device_mappings": [],
+         "capacity_reservation_specification": [],
+         "cpu_options": [],
+         "credit_specification": [],
+         "default_version": 2,
+         "description": "SRE incident hotfix simulation",
+         "disable_api_stop": false,
+         "disable_api_termination": false,
+         "ebs_optimized": "",
+         "elastic_gpu_specifications": [],
+         "elastic_inference_accelerator": [],
+         "enclave_options": [],
+         "hibernation_options": [],
+         "iam_instance_profile": [],
+         "id": "lt-00000000000000000",
+         "image_id": "ami-00000000000000000",
+         "instance_initiated_shutdown_behavior": "",
+         "instance_market_options": [],
+         "instance_requirements": [],
+         "instance_type": "t2.micro",
+         "kernel_id": "",
+         "key_name": "",
+         "latest_version": 2,
+         "license_specification": [],
+         "maintenance_options": [],
+         "metadata_options": [],
+         "monitoring": [],
+         "name": "drift-demo-app-00000000000000000000000000",
+         "name_prefix": "drift-demo-app-",
+         "network_interfaces": [],
+         "placement": [],
+         "private_dns_name_options": [],
+         "ram_disk_id": "",
+         "security_group_names": [],
+         "tag_specifications": [
+          {
+           "resource_type": "instance",
+           "tags": {
+            "Environment": "dev",
+            "ManagedBy": "terraform",
+            "Name": "drift-demo-app"
+           }
+          }
+         ],
+         "tags": {},
+         "tags_all": {
+          "Environment": "dev",
+          "ManagedBy": "terraform",
+          "Project": "drift-demo"
+         },
+         "update_default_version": null,
+         "user_data": "",
+         "vpc_security_group_ids": [
+          "sg-00000000000000000"
+         ]
+        }
+       }
+      ]
+     },
+     {
+      "address": "module.iam",
+      "resources": [
+       {
+        "address": "module.iam.aws_iam_role.app_role",
+        "mode": "managed",
+        "name": "app_role",
+        "provider_name": "registry.terraform.io/hashicorp/aws",
+        "schema_version": 0,
+        "sensitive_values": {
+         "inline_policy": [
+          {}
+         ],
+         "managed_policy_arns": [],
+         "tags": {},
+         "tags_all": {}
+        },
+        "type": "aws_iam_role",
+        "values": {
+         "arn": "arn:aws:REDACTED",
+         "assume_role_policy": "{\"Statement\":[{\"Action\":\"sts:AssumeRole\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"lambda.amazonaws.com\"}}],\"Version\":\"2012-10-17\"}",
+         "create_date": "2026-09-14T07:19:36Z",
+         "description": "",
+         "force_detach_policies": false,
+         "id": "drift-demo-dev-app-role",
+         "inline_policy": [
+          {
+           "name": "drift-demo-app-logging-policy",
+           "policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Action\":[\"logs:CreateLogGroup\",\"logs:CreateLogStream\",\"logs:PutLogEvents\"],\"Effect\":\"Allow\",\"Resource\":\"arn:aws:REDACTED\"}]}"
+          }
+         ],
+         "managed_policy_arns": [],
+         "max_session_duration": 3600,
+         "name": "drift-demo-dev-app-role",
+         "name_prefix": "",
+         "path": "/",
+         "permissions_boundary": "",
+         "tags": {
+          "Environment": "dev",
+          "ManagedBy": "terraform"
+         },
+         "tags_all": {
+          "Environment": "dev",
+          "ManagedBy": "terraform",
+          "Project": "drift-demo"
+         },
+         "unique_id": "AROAREDACTEDROLEID"
+        }
+       },
+       {
+        "address": "module.iam.aws_iam_role_policy.app_logging",
+        "depends_on": [
+         "module.iam.aws_iam_role.app_role"
+        ],
+        "mode": "managed",
+        "name": "app_logging",
+        "provider_name": "registry.terraform.io/hashicorp/aws",
+        "schema_version": 0,
+        "sensitive_values": {},
+        "type": "aws_iam_role_policy",
+        "values": {
+         "id": "drift-demo-dev-app-role:drift-demo-app-logging-policy",
+         "name": "drift-demo-app-logging-policy",
+         "name_prefix": "",
+         "policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Action\":[\"logs:CreateLogGroup\",\"logs:CreateLogStream\",\"logs:PutLogEvents\"],\"Effect\":\"Allow\",\"Resource\":\"arn:aws:REDACTED\"}]}",
+         "role": "drift-demo-dev-app-role"
+        }
+       }
+      ]
+     },
+     {
+      "address": "module.networking",
+      "resources": [
+       {
+        "address": "module.networking.data.aws_region.current",
+        "mode": "data",
+        "name": "current",
+        "provider_name": "registry.terraform.io/hashicorp/aws",
+        "schema_version": 0,
+        "sensitive_values": {},
+        "type": "aws_region",
+        "values": {
+         "description": "US East (N. Virginia)",
+         "endpoint": "ec2.us-east-1.amazonaws.com",
+         "id": "us-east-1",
+         "name": "us-east-1"
+        }
+       },
+       {
+        "address": "module.networking.aws_security_group.web_prod",
+        "depends_on": [
+         "module.networking.aws_vpc.main"
+        ],
+        "mode": "managed",
+        "name": "web_prod",
+        "provider_name": "registry.terraform.io/hashicorp/aws",
+        "schema_version": 1,
+        "sensitive_values": {
+         "egress": [
+          {
+           "cidr_blocks": [
+            false
+           ],
+           "ipv6_cidr_blocks": [],
+           "prefix_list_ids": [],
+           "security_groups": []
+          }
+         ],
+         "ingress": [
+          {
+           "cidr_blocks": [
+            false
+           ],
+           "ipv6_cidr_blocks": [],
+           "prefix_list_ids": [],
+           "security_groups": []
+          }
+         ],
+         "tags": {},
+         "tags_all": {}
+        },
+        "type": "aws_security_group",
+        "values": {
+         "arn": "arn:aws:REDACTED",
+         "description": "Production web traffic - HTTPS only",
+         "egress": [
+          {
+           "cidr_blocks": [
+            "0.0.0.0/0"
+           ],
+           "description": "All outbound",
+           "from_port": 0,
+           "ipv6_cidr_blocks": [],
+           "prefix_list_ids": [],
+           "protocol": "-1",
+           "security_groups": [],
+           "self": false,
+           "to_port": 0
+          }
+         ],
+         "id": "sg-00000000000000000",
+         "ingress": [
+          {
+           "cidr_blocks": [
+            "10.0.0.0/8"
+           ],
+           "description": "HTTPS from internal network",
+           "from_port": 443,
+           "ipv6_cidr_blocks": [],
+           "prefix_list_ids": [],
+           "protocol": "tcp",
+           "security_groups": [],
+           "self": false,
+           "to_port": 443
+          }
+         ],
+         "name": "drift-demo-web-prod-sg",
+         "name_prefix": "",
+         "owner_id": "000000000000",
+         "revoke_rules_on_delete": false,
+         "tags": {
+          "Environment": "dev",
+          "ManagedBy": "terraform",
+          "Name": "drift-demo-web-prod-sg"
+         },
+         "tags_all": {
+          "Environment": "dev",
+          "ManagedBy": "terraform",
+          "Name": "drift-demo-web-prod-sg",
+          "Project": "drift-demo"
+         },
+         "timeouts": null,
+         "vpc_id": "vpc-00000000000000000"
+        }
+       },
+       {
+        "address": "module.networking.aws_subnet.app",
+        "depends_on": [
+         "module.networking.aws_vpc.main",
+         "module.networking.data.aws_region.current"
+        ],
+        "mode": "managed",
+        "name": "app",
+        "provider_name": "registry.terraform.io/hashicorp/aws",
+        "schema_version": 1,
+        "sensitive_values": {
+         "tags": {},
+         "tags_all": {}
+        },
+        "type": "aws_subnet",
+        "values": {
+         "arn": "arn:aws:REDACTED",
+         "assign_ipv6_address_on_creation": false,
+         "availability_zone": "us-east-1a",
+         "availability_zone_id": "use1-az2",
+         "cidr_block": "10.0.1.0/24",
+         "customer_owned_ipv4_pool": "",
+         "enable_dns64": false,
+         "enable_lni_at_device_index": 0,
+         "enable_resource_name_dns_a_record_on_launch": false,
+         "enable_resource_name_dns_aaaa_record_on_launch": false,
+         "id": "subnet-00000000000000000",
+         "ipv6_cidr_block": "",
+         "ipv6_cidr_block_association_id": "",
+         "ipv6_native": false,
+         "map_customer_owned_ip_on_launch": false,
+         "map_public_ip_on_launch": false,
+         "outpost_arn": "",
+         "owner_id": "000000000000",
+         "private_dns_hostname_type_on_launch": "ip-name",
+         "tags": {
+          "Environment": "dev",
+          "ManagedBy": "terraform",
+          "Name": "drift-demo-app-subnet"
+         },
+         "tags_all": {
+          "Environment": "dev",
+          "ManagedBy": "terraform",
+          "Name": "drift-demo-app-subnet",
+          "Project": "drift-demo"
+         },
+         "timeouts": null,
+         "vpc_id": "vpc-00000000000000000"
+        }
+       },
+       {
+        "address": "module.networking.aws_vpc.main",
+        "mode": "managed",
+        "name": "main",
+        "provider_name": "registry.terraform.io/hashicorp/aws",
+        "schema_version": 1,
+        "sensitive_values": {
+         "tags": {},
+         "tags_all": {}
+        },
+        "type": "aws_vpc",
+        "values": {
+         "arn": "arn:aws:REDACTED",
+         "assign_generated_ipv6_cidr_block": false,
+         "cidr_block": "10.0.0.0/16",
+         "default_network_acl_id": "acl-00000000000000000",
+         "default_route_table_id": "rtb-00000000000000000",
+         "default_security_group_id": "sg-00000000000000000",
+         "dhcp_options_id": "dopt-00000000000000000",
+         "enable_dns_hostnames": true,
+         "enable_dns_support": true,
+         "enable_network_address_usage_metrics": false,
+         "id": "vpc-00000000000000000",
+         "instance_tenancy": "default",
+         "ipv4_ipam_pool_id": null,
+         "ipv4_netmask_length": null,
+         "ipv6_association_id": "",
+         "ipv6_cidr_block": "",
+         "ipv6_cidr_block_network_border_group": "",
+         "ipv6_ipam_pool_id": "",
+         "ipv6_netmask_length": 0,
+         "main_route_table_id": "rtb-00000000000000000",
+         "owner_id": "000000000000",
+         "tags": {
+          "Environment": "dev",
+          "ManagedBy": "terraform",
+          "Name": "drift-demo-vpc"
+         },
+         "tags_all": {
+          "Environment": "dev",
+          "ManagedBy": "terraform",
+          "Name": "drift-demo-vpc",
+          "Project": "drift-demo"
+         }
+        }
+       }
+      ]
+     },
+     {
+      "address": "module.storage",
+      "resources": [
+       {
+        "address": "module.storage.data.aws_caller_identity.current",
+        "mode": "data",
+        "name": "current",
+        "provider_name": "registry.terraform.io/hashicorp/aws",
+        "schema_version": 0,
+        "sensitive_values": {},
+        "type": "aws_caller_identity",
+        "values": {
+         "account_id": "000000000000",
+         "arn": "arn:aws:REDACTED",
+         "id": "000000000000",
+         "user_id": "REDACTED"
+        }
+       },
+       {
+        "address": "module.storage.aws_s3_bucket.data_bucket",
+        "depends_on": [
+         "module.storage.data.aws_caller_identity.current"
+        ],
+        "mode": "managed",
+        "name": "data_bucket",
+        "provider_name": "registry.terraform.io/hashicorp/aws",
+        "schema_version": 0,
+        "sensitive_values": {
+         "cors_rule": [],
+         "grant": [
+          {
+           "permissions": [
+            false
+           ]
+          }
+         ],
+         "lifecycle_rule": [],
+         "logging": [],
+         "object_lock_configuration": [],
+         "replication_configuration": [],
+         "server_side_encryption_configuration": [
+          {
+           "rule": [
+            {
+             "apply_server_side_encryption_by_default": [
+              {}
+             ]
+            }
+           ]
+          }
+         ],
+         "tags": {},
+         "tags_all": {},
+         "versioning": [
+          {}
+         ],
+         "website": []
+        },
+        "type": "aws_s3_bucket",
+        "values": {
+         "acceleration_status": "",
+         "acl": null,
+         "arn": "arn:aws:REDACTED",
+         "bucket": "drift-demo-dev-data-000000000000",
+         "bucket_domain_name": "drift-demo-dev-data-000000000000.s3.amazonaws.com",
+         "bucket_prefix": "",
+         "bucket_regional_domain_name": "drift-demo-dev-data-000000000000.s3.us-east-1.amazonaws.com",
+         "cors_rule": [],
+         "force_destroy": false,
+         "grant": [
+          {
+           "id": "0000000000000000000000000000000000000000000000000000000000000000",
+           "permissions": [
+            "FULL_CONTROL"
+           ],
+           "type": "CanonicalUser",
+           "uri": ""
+          }
+         ],
+         "hosted_zone_id": "Z3AQBSTGFYJSTF",
+         "id": "drift-demo-dev-data-000000000000",
+         "lifecycle_rule": [],
+         "logging": [],
+         "object_lock_configuration": [],
+         "object_lock_enabled": false,
+         "policy": "",
+         "region": "us-east-1",
+         "replication_configuration": [],
+         "request_payer": "BucketOwner",
+         "server_side_encryption_configuration": [
+          {
+           "rule": [
+            {
+             "apply_server_side_encryption_by_default": [
+              {
+               "kms_master_key_id": "",
+               "sse_algorithm": "AES256"
+              }
+             ],
+             "bucket_key_enabled": false
+            }
+           ]
+          }
+         ],
+         "tags": {
+          "CostCenter": "engineering-dev",
+          "Environment": "dev",
+          "ManagedBy": "terraform",
+          "Name": "drift-demo-data-bucket",
+          "Project": "drift-demo"
+         },
+         "tags_all": {
+          "CostCenter": "engineering-dev",
+          "Environment": "dev",
+          "ManagedBy": "terraform",
+          "Name": "drift-demo-data-bucket",
+          "Project": "drift-demo"
+         },
+         "timeouts": null,
+         "versioning": [
+          {
+           "enabled": true,
+           "mfa_delete": false
+          }
+         ],
+         "website": [],
+         "website_domain": null,
+         "website_endpoint": null
+        }
+       },
+       {
+        "address": "module.storage.aws_s3_bucket_versioning.data_bucket",
+        "depends_on": [
+         "module.storage.aws_s3_bucket.data_bucket",
+         "module.storage.data.aws_caller_identity.current"
+        ],
+        "mode": "managed",
+        "name": "data_bucket",
+        "provider_name": "registry.terraform.io/hashicorp/aws",
+        "schema_version": 0,
+        "sensitive_values": {
+         "versioning_configuration": [
+          {}
+         ]
+        },
+        "type": "aws_s3_bucket_versioning",
+        "values": {
+         "bucket": "drift-demo-dev-data-000000000000",
+         "expected_bucket_owner": "",
+         "id": "drift-demo-dev-data-000000000000",
+         "mfa": null,
+         "versioning_configuration": [
+          {
+           "mfa_delete": "",
+           "status": "Enabled"
+          }
+         ]
+        }
+       }
+      ]
+     }
+    ]
+   }
+  }
+ },
+ "resource_changes": [
+  {
+   "address": "module.compute.aws_autoscaling_group.app",
+   "change": {
+    "actions": [
+     "no-op"
+    ],
+    "after": {
+     "arn": "arn:aws:REDACTED",
+     "availability_zone_distribution": [
+      {
+       "capacity_distribution_strategy": "balanced-best-effort"
+      }
+     ],
+     "availability_zones": [
+      "us-east-1a"
+     ],
+     "capacity_rebalance": false,
+     "capacity_reservation_specification": [
+      {
+       "capacity_reservation_preference": "default",
+       "capacity_reservation_target": []
+      }
+     ],
+     "context": "",
+     "default_cooldown": 300,
+     "default_instance_warmup": 0,
+     "desired_capacity": 2,
+     "desired_capacity_type": "",
+     "enabled_metrics": [],
+     "force_delete": false,
+     "force_delete_warm_pool": false,
+     "health_check_grace_period": 300,
+     "health_check_type": "EC2",
+     "id": "drift-demo-dev-app-asg",
+     "ignore_failed_scaling_activities": false,
+     "initial_lifecycle_hook": [],
+     "instance_maintenance_policy": [],
+     "instance_refresh": [],
+     "launch_configuration": "",
+     "launch_template": [
+      {
+       "id": "lt-00000000000000000",
+       "name": "drift-demo-app-00000000000000000000000000",
+       "version": "$Latest"
+      }
+     ],
+     "load_balancers": [],
+     "max_instance_lifetime": 0,
+     "max_size": 4,
+     "metrics_granularity": "1Minute",
+     "min_elb_capacity": null,
+     "min_size": 1,
+     "mixed_instances_policy": [],
+     "name": "drift-demo-dev-app-asg",
+     "name_prefix": "",
+     "placement_group": "",
+     "predicted_capacity": 0,
+     "protect_from_scale_in": false,
+     "service_linked_role_arn": "arn:aws:REDACTED",
+     "suspended_processes": [],
+     "tag": [
+      {
+       "key": "Name",
+       "propagate_at_launch": true,
+       "value": "drift-demo-app"
+      }
+     ],
+     "target_group_arns": [],
+     "termination_policies": [],
+     "timeouts": null,
+     "traffic_source": [],
+     "vpc_zone_identifier": [
+      "subnet-00000000000000000"
+     ],
+     "wait_for_capacity_timeout": "10m",
+     "wait_for_elb_capacity": null,
+     "warm_pool": [],
+     "warm_pool_size": 0
+    },
+    "after_sensitive": {
+     "availability_zone_distribution": [
+      {}
+     ],
+     "availability_zones": [
+      false
+     ],
+     "capacity_reservation_specification": [
+      {
+       "capacity_reservation_target": []
+      }
+     ],
+     "enabled_metrics": [],
+     "initial_lifecycle_hook": [],
+     "instance_maintenance_policy": [],
+     "instance_refresh": [],
+     "launch_template": [
+      {}
+     ],
+     "load_balancers": [],
+     "mixed_instances_policy": [],
+     "suspended_processes": [],
+     "tag": [
+      {}
+     ],
+     "target_group_arns": [],
+     "termination_policies": [],
+     "traffic_source": [],
+     "vpc_zone_identifier": [
+      false
+     ],
+     "warm_pool": []
+    },
+    "after_unknown": {},
+    "before": {
+     "arn": "arn:aws:REDACTED",
+     "availability_zone_distribution": [
+      {
+       "capacity_distribution_strategy": "balanced-best-effort"
+      }
+     ],
+     "availability_zones": [
+      "us-east-1a"
+     ],
+     "capacity_rebalance": false,
+     "capacity_reservation_specification": [
+      {
+       "capacity_reservation_preference": "default",
+       "capacity_reservation_target": []
+      }
+     ],
+     "context": "",
+     "default_cooldown": 300,
+     "default_instance_warmup": 0,
+     "desired_capacity": 2,
+     "desired_capacity_type": "",
+     "enabled_metrics": [],
+     "force_delete": false,
+     "force_delete_warm_pool": false,
+     "health_check_grace_period": 300,
+     "health_check_type": "EC2",
+     "id": "drift-demo-dev-app-asg",
+     "ignore_failed_scaling_activities": false,
+     "initial_lifecycle_hook": [],
+     "instance_maintenance_policy": [],
+     "instance_refresh": [],
+     "launch_configuration": "",
+     "launch_template": [
+      {
+       "id": "lt-00000000000000000",
+       "name": "drift-demo-app-00000000000000000000000000",
+       "version": "$Latest"
+      }
+     ],
+     "load_balancers": [],
+     "max_instance_lifetime": 0,
+     "max_size": 4,
+     "metrics_granularity": "1Minute",
+     "min_elb_capacity": null,
+     "min_size": 1,
+     "mixed_instances_policy": [],
+     "name": "drift-demo-dev-app-asg",
+     "name_prefix": "",
+     "placement_group": "",
+     "predicted_capacity": 0,
+     "protect_from_scale_in": false,
+     "service_linked_role_arn": "arn:aws:REDACTED",
+     "suspended_processes": [],
+     "tag": [
+      {
+       "key": "Name",
+       "propagate_at_launch": true,
+       "value": "drift-demo-app"
+      }
+     ],
+     "target_group_arns": [],
+     "termination_policies": [],
+     "timeouts": null,
+     "traffic_source": [],
+     "vpc_zone_identifier": [
+      "subnet-00000000000000000"
+     ],
+     "wait_for_capacity_timeout": "10m",
+     "wait_for_elb_capacity": null,
+     "warm_pool": [],
+     "warm_pool_size": 0
+    },
+    "before_sensitive": {
+     "availability_zone_distribution": [
+      {}
+     ],
+     "availability_zones": [
+      false
+     ],
+     "capacity_reservation_specification": [
+      {
+       "capacity_reservation_target": []
+      }
+     ],
+     "enabled_metrics": [],
+     "initial_lifecycle_hook": [],
+     "instance_maintenance_policy": [],
+     "instance_refresh": [],
+     "launch_template": [
+      {}
+     ],
+     "load_balancers": [],
+     "mixed_instances_policy": [],
+     "suspended_processes": [],
+     "tag": [
+      {}
+     ],
+     "target_group_arns": [],
+     "termination_policies": [],
+     "traffic_source": [],
+     "vpc_zone_identifier": [
+      false
+     ],
+     "warm_pool": []
+    }
+   },
+   "mode": "managed",
+   "module_address": "module.compute",
+   "name": "app",
+   "provider_name": "registry.terraform.io/hashicorp/aws",
+   "type": "aws_autoscaling_group"
+  },
+  {
+   "address": "module.compute.aws_launch_template.app",
+   "change": {
+    "actions": [
+     "update"
+    ],
+    "after": {
+     "arn": "arn:aws:REDACTED",
+     "block_device_mappings": [],
+     "capacity_reservation_specification": [],
+     "cpu_options": [],
+     "credit_specification": [],
+     "default_version": 2,
+     "description": null,
+     "disable_api_stop": false,
+     "disable_api_termination": false,
+     "ebs_optimized": "",
+     "elastic_gpu_specifications": [],
+     "elastic_inference_accelerator": [],
+     "enclave_options": [],
+     "hibernation_options": [],
+     "iam_instance_profile": [],
+     "id": "lt-00000000000000000",
+     "image_id": "ami-00000000000000000",
+     "instance_initiated_shutdown_behavior": "",
+     "instance_market_options": [],
+     "instance_requirements": [],
+     "instance_type": "t3.micro",
+     "kernel_id": "",
+     "key_name": "",
+     "license_specification": [],
+     "maintenance_options": [],
+     "metadata_options": [],
+     "monitoring": [],
+     "name": "drift-demo-app-00000000000000000000000000",
+     "name_prefix": "drift-demo-app-",
+     "network_interfaces": [],
+     "placement": [],
+     "private_dns_name_options": [],
+     "ram_disk_id": "",
+     "security_group_names": [],
+     "tag_specifications": [
+      {
+       "resource_type": "instance",
+       "tags": {
+        "Environment": "dev",
+        "ManagedBy": "terraform",
+        "Name": "drift-demo-app"
+       }
+      }
+     ],
+     "tags": {},
+     "tags_all": {
+      "Environment": "dev",
+      "ManagedBy": "terraform",
+      "Project": "drift-demo"
+     },
+     "update_default_version": null,
+     "user_data": "",
+     "vpc_security_group_ids": [
+      "sg-00000000000000000"
+     ]
+    },
+    "after_sensitive": {
+     "block_device_mappings": [],
+     "capacity_reservation_specification": [],
+     "cpu_options": [],
+     "credit_specification": [],
+     "elastic_gpu_specifications": [],
+     "elastic_inference_accelerator": [],
+     "enclave_options": [],
+     "hibernation_options": [],
+     "iam_instance_profile": [],
+     "instance_market_options": [],
+     "instance_requirements": [],
+     "license_specification": [],
+     "maintenance_options": [],
+     "metadata_options": [],
+     "monitoring": [],
+     "network_interfaces": [],
+     "placement": [],
+     "private_dns_name_options": [],
+     "security_group_names": [],
+     "tag_specifications": [
+      {
+       "tags": {}
+      }
+     ],
+     "tags": {},
+     "tags_all": {},
+     "vpc_security_group_ids": [
+      false
+     ]
+    },
+    "after_unknown": {
+     "block_device_mappings": [],
+     "capacity_reservation_specification": [],
+     "cpu_options": [],
+     "credit_specification": [],
+     "elastic_gpu_specifications": [],
+     "elastic_inference_accelerator": [],
+     "enclave_options": [],
+     "hibernation_options": [],
+     "iam_instance_profile": [],
+     "instance_market_options": [],
+     "instance_requirements": [],
+     "latest_version": true,
+     "license_specification": [],
+     "maintenance_options": [],
+     "metadata_options": [],
+     "monitoring": [],
+     "network_interfaces": [],
+     "placement": [],
+     "private_dns_name_options": [],
+     "security_group_names": [],
+     "tag_specifications": [
+      {
+       "tags": {}
+      }
+     ],
+     "tags": {},
+     "tags_all": {},
+     "vpc_security_group_ids": [
+      false
+     ]
+    },
+    "before": {
+     "arn": "arn:aws:REDACTED",
+     "block_device_mappings": [],
+     "capacity_reservation_specification": [],
+     "cpu_options": [],
+     "credit_specification": [],
+     "default_version": 2,
+     "description": "SRE incident hotfix simulation",
+     "disable_api_stop": false,
+     "disable_api_termination": false,
+     "ebs_optimized": "",
+     "elastic_gpu_specifications": [],
+     "elastic_inference_accelerator": [],
+     "enclave_options": [],
+     "hibernation_options": [],
+     "iam_instance_profile": [],
+     "id": "lt-00000000000000000",
+     "image_id": "ami-00000000000000000",
+     "instance_initiated_shutdown_behavior": "",
+     "instance_market_options": [],
+     "instance_requirements": [],
+     "instance_type": "t2.micro",
+     "kernel_id": "",
+     "key_name": "",
+     "latest_version": 2,
+     "license_specification": [],
+     "maintenance_options": [],
+     "metadata_options": [],
+     "monitoring": [],
+     "name": "drift-demo-app-00000000000000000000000000",
+     "name_prefix": "drift-demo-app-",
+     "network_interfaces": [],
+     "placement": [],
+     "private_dns_name_options": [],
+     "ram_disk_id": "",
+     "security_group_names": [],
+     "tag_specifications": [
+      {
+       "resource_type": "instance",
+       "tags": {
+        "Environment": "dev",
+        "ManagedBy": "terraform",
+        "Name": "drift-demo-app"
+       }
+      }
+     ],
+     "tags": {},
+     "tags_all": {
+      "Environment": "dev",
+      "ManagedBy": "terraform",
+      "Project": "drift-demo"
+     },
+     "update_default_version": null,
+     "user_data": "",
+     "vpc_security_group_ids": [
+      "sg-00000000000000000"
+     ]
+    },
+    "before_sensitive": {
+     "block_device_mappings": [],
+     "capacity_reservation_specification": [],
+     "cpu_options": [],
+     "credit_specification": [],
+     "elastic_gpu_specifications": [],
+     "elastic_inference_accelerator": [],
+     "enclave_options": [],
+     "hibernation_options": [],
+     "iam_instance_profile": [],
+     "instance_market_options": [],
+     "instance_requirements": [],
+     "license_specification": [],
+     "maintenance_options": [],
+     "metadata_options": [],
+     "monitoring": [],
+     "network_interfaces": [],
+     "placement": [],
+     "private_dns_name_options": [],
+     "security_group_names": [],
+     "tag_specifications": [
+      {
+       "tags": {}
+      }
+     ],
+     "tags": {},
+     "tags_all": {},
+     "vpc_security_group_ids": [
+      false
+     ]
+    }
+   },
+   "mode": "managed",
+   "module_address": "module.compute",
+   "name": "app",
+   "provider_name": "registry.terraform.io/hashicorp/aws",
+   "type": "aws_launch_template"
+  },
+  {
+   "address": "module.iam.aws_iam_role.app_role",
+   "change": {
+    "actions": [
+     "no-op"
+    ],
+    "after": {
+     "arn": "arn:aws:REDACTED",
+     "assume_role_policy": "{\"Statement\":[{\"Action\":\"sts:AssumeRole\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"lambda.amazonaws.com\"}}],\"Version\":\"2012-10-17\"}",
+     "create_date": "2026-09-14T07:19:36Z",
+     "description": "",
+     "force_detach_policies": false,
+     "id": "drift-demo-dev-app-role",
+     "inline_policy": [
+      {
+       "name": "drift-demo-app-logging-policy",
+       "policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Action\":[\"logs:CreateLogGroup\",\"logs:CreateLogStream\",\"logs:PutLogEvents\"],\"Effect\":\"Allow\",\"Resource\":\"arn:aws:REDACTED\"}]}"
+      }
+     ],
+     "managed_policy_arns": [],
+     "max_session_duration": 3600,
+     "name": "drift-demo-dev-app-role",
+     "name_prefix": "",
+     "path": "/",
+     "permissions_boundary": "",
+     "tags": {
+      "Environment": "dev",
+      "ManagedBy": "terraform"
+     },
+     "tags_all": {
+      "Environment": "dev",
+      "ManagedBy": "terraform",
+      "Project": "drift-demo"
+     },
+     "unique_id": "AROAREDACTEDROLEID"
+    },
+    "after_sensitive": {
+     "inline_policy": [
+      {}
+     ],
+     "managed_policy_arns": [],
+     "tags": {},
+     "tags_all": {}
+    },
+    "after_unknown": {},
+    "before": {
+     "arn": "arn:aws:REDACTED",
+     "assume_role_policy": "{\"Statement\":[{\"Action\":\"sts:AssumeRole\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"lambda.amazonaws.com\"}}],\"Version\":\"2012-10-17\"}",
+     "create_date": "2026-09-14T07:19:36Z",
+     "description": "",
+     "force_detach_policies": false,
+     "id": "drift-demo-dev-app-role",
+     "inline_policy": [
+      {
+       "name": "drift-demo-app-logging-policy",
+       "policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Action\":[\"logs:CreateLogGroup\",\"logs:CreateLogStream\",\"logs:PutLogEvents\"],\"Effect\":\"Allow\",\"Resource\":\"arn:aws:REDACTED\"}]}"
+      }
+     ],
+     "managed_policy_arns": [],
+     "max_session_duration": 3600,
+     "name": "drift-demo-dev-app-role",
+     "name_prefix": "",
+     "path": "/",
+     "permissions_boundary": "",
+     "tags": {
+      "Environment": "dev",
+      "ManagedBy": "terraform"
+     },
+     "tags_all": {
+      "Environment": "dev",
+      "ManagedBy": "terraform",
+      "Project": "drift-demo"
+     },
+     "unique_id": "AROAREDACTEDROLEID"
+    },
+    "before_sensitive": {
+     "inline_policy": [
+      {}
+     ],
+     "managed_policy_arns": [],
+     "tags": {},
+     "tags_all": {}
+    }
+   },
+   "mode": "managed",
+   "module_address": "module.iam",
+   "name": "app_role",
+   "provider_name": "registry.terraform.io/hashicorp/aws",
+   "type": "aws_iam_role"
+  },
+  {
+   "address": "module.iam.aws_iam_role_policy.app_logging",
+   "change": {
+    "actions": [
+     "no-op"
+    ],
+    "after": {
+     "id": "drift-demo-dev-app-role:drift-demo-app-logging-policy",
+     "name": "drift-demo-app-logging-policy",
+     "name_prefix": "",
+     "policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Action\":[\"logs:CreateLogGroup\",\"logs:CreateLogStream\",\"logs:PutLogEvents\"],\"Effect\":\"Allow\",\"Resource\":\"arn:aws:REDACTED\"}]}",
+     "role": "drift-demo-dev-app-role"
+    },
+    "after_sensitive": {},
+    "after_unknown": {},
+    "before": {
+     "id": "drift-demo-dev-app-role:drift-demo-app-logging-policy",
+     "name": "drift-demo-app-logging-policy",
+     "name_prefix": "",
+     "policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Action\":[\"logs:CreateLogGroup\",\"logs:CreateLogStream\",\"logs:PutLogEvents\"],\"Effect\":\"Allow\",\"Resource\":\"arn:aws:REDACTED\"}]}",
+     "role": "drift-demo-dev-app-role"
+    },
+    "before_sensitive": {}
+   },
+   "mode": "managed",
+   "module_address": "module.iam",
+   "name": "app_logging",
+   "provider_name": "registry.terraform.io/hashicorp/aws",
+   "type": "aws_iam_role_policy"
+  },
+  {
+   "address": "module.networking.aws_security_group.web_prod",
+   "change": {
+    "actions": [
+     "no-op"
+    ],
+    "after": {
+     "arn": "arn:aws:REDACTED",
+     "description": "Production web traffic - HTTPS only",
+     "egress": [
+      {
+       "cidr_blocks": [
+        "0.0.0.0/0"
+       ],
+       "description": "All outbound",
+       "from_port": 0,
+       "ipv6_cidr_blocks": [],
+       "prefix_list_ids": [],
+       "protocol": "-1",
+       "security_groups": [],
+       "self": false,
+       "to_port": 0
+      }
+     ],
+     "id": "sg-00000000000000000",
+     "ingress": [
+      {
+       "cidr_blocks": [
+        "10.0.0.0/8"
+       ],
+       "description": "HTTPS from internal network",
+       "from_port": 443,
+       "ipv6_cidr_blocks": [],
+       "prefix_list_ids": [],
+       "protocol": "tcp",
+       "security_groups": [],
+       "self": false,
+       "to_port": 443
+      }
+     ],
+     "name": "drift-demo-web-prod-sg",
+     "name_prefix": "",
+     "owner_id": "000000000000",
+     "revoke_rules_on_delete": false,
+     "tags": {
+      "Environment": "dev",
+      "ManagedBy": "terraform",
+      "Name": "drift-demo-web-prod-sg"
+     },
+     "tags_all": {
+      "Environment": "dev",
+      "ManagedBy": "terraform",
+      "Name": "drift-demo-web-prod-sg",
+      "Project": "drift-demo"
+     },
+     "timeouts": null,
+     "vpc_id": "vpc-00000000000000000"
+    },
+    "after_sensitive": {
+     "egress": [
+      {
+       "cidr_blocks": [
+        false
+       ],
+       "ipv6_cidr_blocks": [],
+       "prefix_list_ids": [],
+       "security_groups": []
+      }
+     ],
+     "ingress": [
+      {
+       "cidr_blocks": [
+        false
+       ],
+       "ipv6_cidr_blocks": [],
+       "prefix_list_ids": [],
+       "security_groups": []
+      }
+     ],
+     "tags": {},
+     "tags_all": {}
+    },
+    "after_unknown": {},
+    "before": {
+     "arn": "arn:aws:REDACTED",
+     "description": "Production web traffic - HTTPS only",
+     "egress": [
+      {
+       "cidr_blocks": [
+        "0.0.0.0/0"
+       ],
+       "description": "All outbound",
+       "from_port": 0,
+       "ipv6_cidr_blocks": [],
+       "prefix_list_ids": [],
+       "protocol": "-1",
+       "security_groups": [],
+       "self": false,
+       "to_port": 0
+      }
+     ],
+     "id": "sg-00000000000000000",
+     "ingress": [
+      {
+       "cidr_blocks": [
+        "10.0.0.0/8"
+       ],
+       "description": "HTTPS from internal network",
+       "from_port": 443,
+       "ipv6_cidr_blocks": [],
+       "prefix_list_ids": [],
+       "protocol": "tcp",
+       "security_groups": [],
+       "self": false,
+       "to_port": 443
+      }
+     ],
+     "name": "drift-demo-web-prod-sg",
+     "name_prefix": "",
+     "owner_id": "000000000000",
+     "revoke_rules_on_delete": false,
+     "tags": {
+      "Environment": "dev",
+      "ManagedBy": "terraform",
+      "Name": "drift-demo-web-prod-sg"
+     },
+     "tags_all": {
+      "Environment": "dev",
+      "ManagedBy": "terraform",
+      "Name": "drift-demo-web-prod-sg",
+      "Project": "drift-demo"
+     },
+     "timeouts": null,
+     "vpc_id": "vpc-00000000000000000"
+    },
+    "before_sensitive": {
+     "egress": [
+      {
+       "cidr_blocks": [
+        false
+       ],
+       "ipv6_cidr_blocks": [],
+       "prefix_list_ids": [],
+       "security_groups": []
+      }
+     ],
+     "ingress": [
+      {
+       "cidr_blocks": [
+        false
+       ],
+       "ipv6_cidr_blocks": [],
+       "prefix_list_ids": [],
+       "security_groups": []
+      }
+     ],
+     "tags": {},
+     "tags_all": {}
+    }
+   },
+   "mode": "managed",
+   "module_address": "module.networking",
+   "name": "web_prod",
+   "provider_name": "registry.terraform.io/hashicorp/aws",
+   "type": "aws_security_group"
+  },
+  {
+   "address": "module.networking.aws_subnet.app",
+   "change": {
+    "actions": [
+     "no-op"
+    ],
+    "after": {
+     "arn": "arn:aws:REDACTED",
+     "assign_ipv6_address_on_creation": false,
+     "availability_zone": "us-east-1a",
+     "availability_zone_id": "use1-az2",
+     "cidr_block": "10.0.1.0/24",
+     "customer_owned_ipv4_pool": "",
+     "enable_dns64": false,
+     "enable_lni_at_device_index": 0,
+     "enable_resource_name_dns_a_record_on_launch": false,
+     "enable_resource_name_dns_aaaa_record_on_launch": false,
+     "id": "subnet-00000000000000000",
+     "ipv6_cidr_block": "",
+     "ipv6_cidr_block_association_id": "",
+     "ipv6_native": false,
+     "map_customer_owned_ip_on_launch": false,
+     "map_public_ip_on_launch": false,
+     "outpost_arn": "",
+     "owner_id": "000000000000",
+     "private_dns_hostname_type_on_launch": "ip-name",
+     "tags": {
+      "Environment": "dev",
+      "ManagedBy": "terraform",
+      "Name": "drift-demo-app-subnet"
+     },
+     "tags_all": {
+      "Environment": "dev",
+      "ManagedBy": "terraform",
+      "Name": "drift-demo-app-subnet",
+      "Project": "drift-demo"
+     },
+     "timeouts": null,
+     "vpc_id": "vpc-00000000000000000"
+    },
+    "after_sensitive": {
+     "tags": {},
+     "tags_all": {}
+    },
+    "after_unknown": {},
+    "before": {
+     "arn": "arn:aws:REDACTED",
+     "assign_ipv6_address_on_creation": false,
+     "availability_zone": "us-east-1a",
+     "availability_zone_id": "use1-az2",
+     "cidr_block": "10.0.1.0/24",
+     "customer_owned_ipv4_pool": "",
+     "enable_dns64": false,
+     "enable_lni_at_device_index": 0,
+     "enable_resource_name_dns_a_record_on_launch": false,
+     "enable_resource_name_dns_aaaa_record_on_launch": false,
+     "id": "subnet-00000000000000000",
+     "ipv6_cidr_block": "",
+     "ipv6_cidr_block_association_id": "",
+     "ipv6_native": false,
+     "map_customer_owned_ip_on_launch": false,
+     "map_public_ip_on_launch": false,
+     "outpost_arn": "",
+     "owner_id": "000000000000",
+     "private_dns_hostname_type_on_launch": "ip-name",
+     "tags": {
+      "Environment": "dev",
+      "ManagedBy": "terraform",
+      "Name": "drift-demo-app-subnet"
+     },
+     "tags_all": {
+      "Environment": "dev",
+      "ManagedBy": "terraform",
+      "Name": "drift-demo-app-subnet",
+      "Project": "drift-demo"
+     },
+     "timeouts": null,
+     "vpc_id": "vpc-00000000000000000"
+    },
+    "before_sensitive": {
+     "tags": {},
+     "tags_all": {}
+    }
+   },
+   "mode": "managed",
+   "module_address": "module.networking",
+   "name": "app",
+   "provider_name": "registry.terraform.io/hashicorp/aws",
+   "type": "aws_subnet"
+  },
+  {
+   "address": "module.networking.aws_vpc.main",
+   "change": {
+    "actions": [
+     "no-op"
+    ],
+    "after": {
+     "arn": "arn:aws:REDACTED",
+     "assign_generated_ipv6_cidr_block": false,
+     "cidr_block": "10.0.0.0/16",
+     "default_network_acl_id": "acl-00000000000000000",
+     "default_route_table_id": "rtb-00000000000000000",
+     "default_security_group_id": "sg-00000000000000000",
+     "dhcp_options_id": "dopt-00000000000000000",
+     "enable_dns_hostnames": true,
+     "enable_dns_support": true,
+     "enable_network_address_usage_metrics": false,
+     "id": "vpc-00000000000000000",
+     "instance_tenancy": "default",
+     "ipv4_ipam_pool_id": null,
+     "ipv4_netmask_length": null,
+     "ipv6_association_id": "",
+     "ipv6_cidr_block": "",
+     "ipv6_cidr_block_network_border_group": "",
+     "ipv6_ipam_pool_id": "",
+     "ipv6_netmask_length": 0,
+     "main_route_table_id": "rtb-00000000000000000",
+     "owner_id": "000000000000",
+     "tags": {
+      "Environment": "dev",
+      "ManagedBy": "terraform",
+      "Name": "drift-demo-vpc"
+     },
+     "tags_all": {
+      "Environment": "dev",
+      "ManagedBy": "terraform",
+      "Name": "drift-demo-vpc",
+      "Project": "drift-demo"
+     }
+    },
+    "after_sensitive": {
+     "tags": {},
+     "tags_all": {}
+    },
+    "after_unknown": {},
+    "before": {
+     "arn": "arn:aws:REDACTED",
+     "assign_generated_ipv6_cidr_block": false,
+     "cidr_block": "10.0.0.0/16",
+     "default_network_acl_id": "acl-00000000000000000",
+     "default_route_table_id": "rtb-00000000000000000",
+     "default_security_group_id": "sg-00000000000000000",
+     "dhcp_options_id": "dopt-00000000000000000",
+     "enable_dns_hostnames": true,
+     "enable_dns_support": true,
+     "enable_network_address_usage_metrics": false,
+     "id": "vpc-00000000000000000",
+     "instance_tenancy": "default",
+     "ipv4_ipam_pool_id": null,
+     "ipv4_netmask_length": null,
+     "ipv6_association_id": "",
+     "ipv6_cidr_block": "",
+     "ipv6_cidr_block_network_border_group": "",
+     "ipv6_ipam_pool_id": "",
+     "ipv6_netmask_length": 0,
+     "main_route_table_id": "rtb-00000000000000000",
+     "owner_id": "000000000000",
+     "tags": {
+      "Environment": "dev",
+      "ManagedBy": "terraform",
+      "Name": "drift-demo-vpc"
+     },
+     "tags_all": {
+      "Environment": "dev",
+      "ManagedBy": "terraform",
+      "Name": "drift-demo-vpc",
+      "Project": "drift-demo"
+     }
+    },
+    "before_sensitive": {
+     "tags": {},
+     "tags_all": {}
+    }
+   },
+   "mode": "managed",
+   "module_address": "module.networking",
+   "name": "main",
+   "provider_name": "registry.terraform.io/hashicorp/aws",
+   "type": "aws_vpc"
+  },
+  {
+   "address": "module.storage.aws_s3_bucket.data_bucket",
+   "change": {
+    "actions": [
+     "no-op"
+    ],
+    "after": {
+     "acceleration_status": "",
+     "acl": null,
+     "arn": "arn:aws:REDACTED",
+     "bucket": "drift-demo-dev-data-000000000000",
+     "bucket_domain_name": "drift-demo-dev-data-000000000000.s3.amazonaws.com",
+     "bucket_prefix": "",
+     "bucket_regional_domain_name": "drift-demo-dev-data-000000000000.s3.us-east-1.amazonaws.com",
+     "cors_rule": [],
+     "force_destroy": false,
+     "grant": [
+      {
+       "id": "0000000000000000000000000000000000000000000000000000000000000000",
+       "permissions": [
+        "FULL_CONTROL"
+       ],
+       "type": "CanonicalUser",
+       "uri": ""
+      }
+     ],
+     "hosted_zone_id": "Z3AQBSTGFYJSTF",
+     "id": "drift-demo-dev-data-000000000000",
+     "lifecycle_rule": [],
+     "logging": [],
+     "object_lock_configuration": [],
+     "object_lock_enabled": false,
+     "policy": "",
+     "region": "us-east-1",
+     "replication_configuration": [],
+     "request_payer": "BucketOwner",
+     "server_side_encryption_configuration": [
+      {
+       "rule": [
+        {
+         "apply_server_side_encryption_by_default": [
+          {
+           "kms_master_key_id": "",
+           "sse_algorithm": "AES256"
+          }
+         ],
+         "bucket_key_enabled": false
+        }
+       ]
+      }
+     ],
+     "tags": {
+      "CostCenter": "engineering-dev",
+      "Environment": "dev",
+      "ManagedBy": "terraform",
+      "Name": "drift-demo-data-bucket",
+      "Project": "drift-demo"
+     },
+     "tags_all": {
+      "CostCenter": "engineering-dev",
+      "Environment": "dev",
+      "ManagedBy": "terraform",
+      "Name": "drift-demo-data-bucket",
+      "Project": "drift-demo"
+     },
+     "timeouts": null,
+     "versioning": [
+      {
+       "enabled": true,
+       "mfa_delete": false
+      }
+     ],
+     "website": [],
+     "website_domain": null,
+     "website_endpoint": null
+    },
+    "after_sensitive": {
+     "cors_rule": [],
+     "grant": [
+      {
+       "permissions": [
+        false
+       ]
+      }
+     ],
+     "lifecycle_rule": [],
+     "logging": [],
+     "object_lock_configuration": [],
+     "replication_configuration": [],
+     "server_side_encryption_configuration": [
+      {
+       "rule": [
+        {
+         "apply_server_side_encryption_by_default": [
+          {}
+         ]
+        }
+       ]
+      }
+     ],
+     "tags": {},
+     "tags_all": {},
+     "versioning": [
+      {}
+     ],
+     "website": []
+    },
+    "after_unknown": {},
+    "before": {
+     "acceleration_status": "",
+     "acl": null,
+     "arn": "arn:aws:REDACTED",
+     "bucket": "drift-demo-dev-data-000000000000",
+     "bucket_domain_name": "drift-demo-dev-data-000000000000.s3.amazonaws.com",
+     "bucket_prefix": "",
+     "bucket_regional_domain_name": "drift-demo-dev-data-000000000000.s3.us-east-1.amazonaws.com",
+     "cors_rule": [],
+     "force_destroy": false,
+     "grant": [
+      {
+       "id": "0000000000000000000000000000000000000000000000000000000000000000",
+       "permissions": [
+        "FULL_CONTROL"
+       ],
+       "type": "CanonicalUser",
+       "uri": ""
+      }
+     ],
+     "hosted_zone_id": "Z3AQBSTGFYJSTF",
+     "id": "drift-demo-dev-data-000000000000",
+     "lifecycle_rule": [],
+     "logging": [],
+     "object_lock_configuration": [],
+     "object_lock_enabled": false,
+     "policy": "",
+     "region": "us-east-1",
+     "replication_configuration": [],
+     "request_payer": "BucketOwner",
+     "server_side_encryption_configuration": [
+      {
+       "rule": [
+        {
+         "apply_server_side_encryption_by_default": [
+          {
+           "kms_master_key_id": "",
+           "sse_algorithm": "AES256"
+          }
+         ],
+         "bucket_key_enabled": false
+        }
+       ]
+      }
+     ],
+     "tags": {
+      "CostCenter": "engineering-dev",
+      "Environment": "dev",
+      "ManagedBy": "terraform",
+      "Name": "drift-demo-data-bucket",
+      "Project": "drift-demo"
+     },
+     "tags_all": {
+      "CostCenter": "engineering-dev",
+      "Environment": "dev",
+      "ManagedBy": "terraform",
+      "Name": "drift-demo-data-bucket",
+      "Project": "drift-demo"
+     },
+     "timeouts": null,
+     "versioning": [
+      {
+       "enabled": true,
+       "mfa_delete": false
+      }
+     ],
+     "website": [],
+     "website_domain": null,
+     "website_endpoint": null
+    },
+    "before_sensitive": {
+     "cors_rule": [],
+     "grant": [
+      {
+       "permissions": [
+        false
+       ]
+      }
+     ],
+     "lifecycle_rule": [],
+     "logging": [],
+     "object_lock_configuration": [],
+     "replication_configuration": [],
+     "server_side_encryption_configuration": [
+      {
+       "rule": [
+        {
+         "apply_server_side_encryption_by_default": [
+          {}
+         ]
+        }
+       ]
+      }
+     ],
+     "tags": {},
+     "tags_all": {},
+     "versioning": [
+      {}
+     ],
+     "website": []
+    }
+   },
+   "mode": "managed",
+   "module_address": "module.storage",
+   "name": "data_bucket",
+   "provider_name": "registry.terraform.io/hashicorp/aws",
+   "type": "aws_s3_bucket"
+  },
+  {
+   "address": "module.storage.aws_s3_bucket_versioning.data_bucket",
+   "change": {
+    "actions": [
+     "no-op"
+    ],
+    "after": {
+     "bucket": "drift-demo-dev-data-000000000000",
+     "expected_bucket_owner": "",
+     "id": "drift-demo-dev-data-000000000000",
+     "mfa": null,
+     "versioning_configuration": [
+      {
+       "mfa_delete": "",
+       "status": "Enabled"
+      }
+     ]
+    },
+    "after_sensitive": {
+     "versioning_configuration": [
+      {}
+     ]
+    },
+    "after_unknown": {},
+    "before": {
+     "bucket": "drift-demo-dev-data-000000000000",
+     "expected_bucket_owner": "",
+     "id": "drift-demo-dev-data-000000000000",
+     "mfa": null,
+     "versioning_configuration": [
+      {
+       "mfa_delete": "",
+       "status": "Enabled"
+      }
+     ]
+    },
+    "before_sensitive": {
+     "versioning_configuration": [
+      {}
+     ]
+    }
+   },
+   "mode": "managed",
+   "module_address": "module.storage",
+   "name": "data_bucket",
+   "provider_name": "registry.terraform.io/hashicorp/aws",
+   "type": "aws_s3_bucket_versioning"
+  }
+ ],
+ "resource_drift": [
+  {
+   "address": "module.compute.aws_autoscaling_group.app",
+   "change": {
+    "actions": [
+     "update"
+    ],
+    "after": {
+     "arn": "arn:aws:REDACTED",
+     "availability_zone_distribution": [
+      {
+       "capacity_distribution_strategy": "balanced-best-effort"
+      }
+     ],
+     "availability_zones": [
+      "us-east-1a"
+     ],
+     "capacity_rebalance": false,
+     "capacity_reservation_specification": [
+      {
+       "capacity_reservation_preference": "default",
+       "capacity_reservation_target": []
+      }
+     ],
+     "context": "",
+     "default_cooldown": 300,
+     "default_instance_warmup": 0,
+     "desired_capacity": 2,
+     "desired_capacity_type": "",
+     "enabled_metrics": [],
+     "force_delete": false,
+     "force_delete_warm_pool": false,
+     "health_check_grace_period": 300,
+     "health_check_type": "EC2",
+     "id": "drift-demo-dev-app-asg",
+     "ignore_failed_scaling_activities": false,
+     "initial_lifecycle_hook": [],
+     "instance_maintenance_policy": [],
+     "instance_refresh": [],
+     "launch_configuration": "",
+     "launch_template": [
+      {
+       "id": "lt-00000000000000000",
+       "name": "drift-demo-app-00000000000000000000000000",
+       "version": "$Latest"
+      }
+     ],
+     "load_balancers": [],
+     "max_instance_lifetime": 0,
+     "max_size": 4,
+     "metrics_granularity": "1Minute",
+     "min_elb_capacity": null,
+     "min_size": 1,
+     "mixed_instances_policy": [],
+     "name": "drift-demo-dev-app-asg",
+     "name_prefix": "",
+     "placement_group": "",
+     "predicted_capacity": 0,
+     "protect_from_scale_in": false,
+     "service_linked_role_arn": "arn:aws:REDACTED",
+     "suspended_processes": [],
+     "tag": [
+      {
+       "key": "Name",
+       "propagate_at_launch": true,
+       "value": "drift-demo-app"
+      }
+     ],
+     "target_group_arns": [],
+     "termination_policies": [],
+     "timeouts": null,
+     "traffic_source": [],
+     "vpc_zone_identifier": [
+      "subnet-00000000000000000"
+     ],
+     "wait_for_capacity_timeout": "10m",
+     "wait_for_elb_capacity": null,
+     "warm_pool": [],
+     "warm_pool_size": 0
+    },
+    "after_sensitive": {
+     "availability_zone_distribution": [
+      {}
+     ],
+     "availability_zones": [
+      false
+     ],
+     "capacity_reservation_specification": [
+      {
+       "capacity_reservation_target": []
+      }
+     ],
+     "enabled_metrics": [],
+     "initial_lifecycle_hook": [],
+     "instance_maintenance_policy": [],
+     "instance_refresh": [],
+     "launch_template": [
+      {}
+     ],
+     "load_balancers": [],
+     "mixed_instances_policy": [],
+     "suspended_processes": [],
+     "tag": [
+      {}
+     ],
+     "target_group_arns": [],
+     "termination_policies": [],
+     "traffic_source": [],
+     "vpc_zone_identifier": [
+      false
+     ],
+     "warm_pool": []
+    },
+    "after_unknown": {},
+    "before": {
+     "arn": "arn:aws:REDACTED",
+     "availability_zone_distribution": [
+      {
+       "capacity_distribution_strategy": "balanced-best-effort"
+      }
+     ],
+     "availability_zones": [
+      "us-east-1a"
+     ],
+     "capacity_rebalance": false,
+     "capacity_reservation_specification": [
+      {
+       "capacity_reservation_preference": "default",
+       "capacity_reservation_target": []
+      }
+     ],
+     "context": "",
+     "default_cooldown": 300,
+     "default_instance_warmup": 0,
+     "desired_capacity": 2,
+     "desired_capacity_type": "",
+     "enabled_metrics": null,
+     "force_delete": false,
+     "force_delete_warm_pool": false,
+     "health_check_grace_period": 300,
+     "health_check_type": "EC2",
+     "id": "drift-demo-dev-app-asg",
+     "ignore_failed_scaling_activities": false,
+     "initial_lifecycle_hook": [],
+     "instance_maintenance_policy": [],
+     "instance_refresh": [],
+     "launch_configuration": "",
+     "launch_template": [
+      {
+       "id": "lt-00000000000000000",
+       "name": "drift-demo-app-00000000000000000000000000",
+       "version": "$Latest"
+      }
+     ],
+     "load_balancers": [],
+     "max_instance_lifetime": 0,
+     "max_size": 4,
+     "metrics_granularity": "1Minute",
+     "min_elb_capacity": null,
+     "min_size": 1,
+     "mixed_instances_policy": [],
+     "name": "drift-demo-dev-app-asg",
+     "name_prefix": "",
+     "placement_group": "",
+     "predicted_capacity": 0,
+     "protect_from_scale_in": false,
+     "service_linked_role_arn": "arn:aws:REDACTED",
+     "suspended_processes": null,
+     "tag": [
+      {
+       "key": "Name",
+       "propagate_at_launch": true,
+       "value": "drift-demo-app"
+      }
+     ],
+     "target_group_arns": [],
+     "termination_policies": null,
+     "timeouts": null,
+     "traffic_source": [],
+     "vpc_zone_identifier": [
+      "subnet-00000000000000000"
+     ],
+     "wait_for_capacity_timeout": "10m",
+     "wait_for_elb_capacity": null,
+     "warm_pool": [],
+     "warm_pool_size": 0
+    },
+    "before_sensitive": {
+     "availability_zone_distribution": [
+      {}
+     ],
+     "availability_zones": [
+      false
+     ],
+     "capacity_reservation_specification": [
+      {
+       "capacity_reservation_target": []
+      }
+     ],
+     "initial_lifecycle_hook": [],
+     "instance_maintenance_policy": [],
+     "instance_refresh": [],
+     "launch_template": [
+      {}
+     ],
+     "load_balancers": [],
+     "mixed_instances_policy": [],
+     "tag": [
+      {}
+     ],
+     "target_group_arns": [],
+     "traffic_source": [],
+     "vpc_zone_identifier": [
+      false
+     ],
+     "warm_pool": []
+    }
+   },
+   "mode": "managed",
+   "module_address": "module.compute",
+   "name": "app",
+   "provider_name": "registry.terraform.io/hashicorp/aws",
+   "type": "aws_autoscaling_group"
+  },
+  {
+   "address": "module.compute.aws_launch_template.app",
+   "change": {
+    "actions": [
+     "update"
+    ],
+    "after": {
+     "arn": "arn:aws:REDACTED",
+     "block_device_mappings": [],
+     "capacity_reservation_specification": [],
+     "cpu_options": [],
+     "credit_specification": [],
+     "default_version": 2,
+     "description": "SRE incident hotfix simulation",
+     "disable_api_stop": false,
+     "disable_api_termination": false,
+     "ebs_optimized": "",
+     "elastic_gpu_specifications": [],
+     "elastic_inference_accelerator": [],
+     "enclave_options": [],
+     "hibernation_options": [],
+     "iam_instance_profile": [],
+     "id": "lt-00000000000000000",
+     "image_id": "ami-00000000000000000",
+     "instance_initiated_shutdown_behavior": "",
+     "instance_market_options": [],
+     "instance_requirements": [],
+     "instance_type": "t2.micro",
+     "kernel_id": "",
+     "key_name": "",
+     "latest_version": 2,
+     "license_specification": [],
+     "maintenance_options": [],
+     "metadata_options": [],
+     "monitoring": [],
+     "name": "drift-demo-app-00000000000000000000000000",
+     "name_prefix": "drift-demo-app-",
+     "network_interfaces": [],
+     "placement": [],
+     "private_dns_name_options": [],
+     "ram_disk_id": "",
+     "security_group_names": [],
+     "tag_specifications": [
+      {
+       "resource_type": "instance",
+       "tags": {
+        "Environment": "dev",
+        "ManagedBy": "terraform",
+        "Name": "drift-demo-app"
+       }
+      }
+     ],
+     "tags": {},
+     "tags_all": {
+      "Environment": "dev",
+      "ManagedBy": "terraform",
+      "Project": "drift-demo"
+     },
+     "update_default_version": null,
+     "user_data": "",
+     "vpc_security_group_ids": [
+      "sg-00000000000000000"
+     ]
+    },
+    "after_sensitive": {
+     "block_device_mappings": [],
+     "capacity_reservation_specification": [],
+     "cpu_options": [],
+     "credit_specification": [],
+     "elastic_gpu_specifications": [],
+     "elastic_inference_accelerator": [],
+     "enclave_options": [],
+     "hibernation_options": [],
+     "iam_instance_profile": [],
+     "instance_market_options": [],
+     "instance_requirements": [],
+     "license_specification": [],
+     "maintenance_options": [],
+     "metadata_options": [],
+     "monitoring": [],
+     "network_interfaces": [],
+     "placement": [],
+     "private_dns_name_options": [],
+     "security_group_names": [],
+     "tag_specifications": [
+      {
+       "tags": {}
+      }
+     ],
+     "tags": {},
+     "tags_all": {},
+     "vpc_security_group_ids": [
+      false
+     ]
+    },
+    "after_unknown": {},
+    "before": {
+     "arn": "arn:aws:REDACTED",
+     "block_device_mappings": [],
+     "capacity_reservation_specification": [],
+     "cpu_options": [],
+     "credit_specification": [],
+     "default_version": 1,
+     "description": "",
+     "disable_api_stop": false,
+     "disable_api_termination": false,
+     "ebs_optimized": "",
+     "elastic_gpu_specifications": [],
+     "elastic_inference_accelerator": [],
+     "enclave_options": [],
+     "hibernation_options": [],
+     "iam_instance_profile": [],
+     "id": "lt-00000000000000000",
+     "image_id": "ami-00000000000000000",
+     "instance_initiated_shutdown_behavior": "",
+     "instance_market_options": [],
+     "instance_requirements": [],
+     "instance_type": "t3.micro",
+     "kernel_id": "",
+     "key_name": "",
+     "latest_version": 1,
+     "license_specification": [],
+     "maintenance_options": [],
+     "metadata_options": [],
+     "monitoring": [],
+     "name": "drift-demo-app-00000000000000000000000000",
+     "name_prefix": "drift-demo-app-",
+     "network_interfaces": [],
+     "placement": [],
+     "private_dns_name_options": [],
+     "ram_disk_id": "",
+     "security_group_names": null,
+     "tag_specifications": [
+      {
+       "resource_type": "instance",
+       "tags": {
+        "Environment": "dev",
+        "ManagedBy": "terraform",
+        "Name": "drift-demo-app"
+       }
+      }
+     ],
+     "tags": null,
+     "tags_all": {
+      "Environment": "dev",
+      "ManagedBy": "terraform",
+      "Project": "drift-demo"
+     },
+     "update_default_version": null,
+     "user_data": "",
+     "vpc_security_group_ids": [
+      "sg-00000000000000000"
+     ]
+    },
+    "before_sensitive": {
+     "block_device_mappings": [],
+     "capacity_reservation_specification": [],
+     "cpu_options": [],
+     "credit_specification": [],
+     "elastic_gpu_specifications": [],
+     "elastic_inference_accelerator": [],
+     "enclave_options": [],
+     "hibernation_options": [],
+     "iam_instance_profile": [],
+     "instance_market_options": [],
+     "instance_requirements": [],
+     "license_specification": [],
+     "maintenance_options": [],
+     "metadata_options": [],
+     "monitoring": [],
+     "network_interfaces": [],
+     "placement": [],
+     "private_dns_name_options": [],
+     "tag_specifications": [
+      {
+       "tags": {}
+      }
+     ],
+     "tags_all": {},
+     "vpc_security_group_ids": [
+      false
+     ]
+    }
+   },
+   "mode": "managed",
+   "module_address": "module.compute",
+   "name": "app",
+   "provider_name": "registry.terraform.io/hashicorp/aws",
+   "type": "aws_launch_template"
+  },
+  {
+   "address": "module.iam.aws_iam_role.app_role",
+   "change": {
+    "actions": [
+     "update"
+    ],
+    "after": {
+     "arn": "arn:aws:REDACTED",
+     "assume_role_policy": "{\"Statement\":[{\"Action\":\"sts:AssumeRole\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"lambda.amazonaws.com\"}}],\"Version\":\"2012-10-17\"}",
+     "create_date": "2026-09-14T07:19:36Z",
+     "description": "",
+     "force_detach_policies": false,
+     "id": "drift-demo-dev-app-role",
+     "inline_policy": [
+      {
+       "name": "drift-demo-app-logging-policy",
+       "policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Action\":[\"logs:CreateLogGroup\",\"logs:CreateLogStream\",\"logs:PutLogEvents\"],\"Effect\":\"Allow\",\"Resource\":\"arn:aws:REDACTED\"}]}"
+      }
+     ],
+     "managed_policy_arns": [],
+     "max_session_duration": 3600,
+     "name": "drift-demo-dev-app-role",
+     "name_prefix": "",
+     "path": "/",
+     "permissions_boundary": "",
+     "tags": {
+      "Environment": "dev",
+      "ManagedBy": "terraform"
+     },
+     "tags_all": {
+      "Environment": "dev",
+      "ManagedBy": "terraform",
+      "Project": "drift-demo"
+     },
+     "unique_id": "AROAREDACTEDROLEID"
+    },
+    "after_sensitive": {
+     "inline_policy": [
+      {}
+     ],
+     "managed_policy_arns": [],
+     "tags": {},
+     "tags_all": {}
+    },
+    "after_unknown": {},
+    "before": {
+     "arn": "arn:aws:REDACTED",
+     "assume_role_policy": "{\"Statement\":[{\"Action\":\"sts:AssumeRole\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"lambda.amazonaws.com\"}}],\"Version\":\"2012-10-17\"}",
+     "create_date": "2026-09-14T07:19:36Z",
+     "description": "",
+     "force_detach_policies": false,
+     "id": "drift-demo-dev-app-role",
+     "inline_policy": [],
+     "managed_policy_arns": [],
+     "max_session_duration": 3600,
+     "name": "drift-demo-dev-app-role",
+     "name_prefix": "",
+     "path": "/",
+     "permissions_boundary": "",
+     "tags": {
+      "Environment": "dev",
+      "ManagedBy": "terraform"
+     },
+     "tags_all": {
+      "Environment": "dev",
+      "ManagedBy": "terraform",
+      "Project": "drift-demo"
+     },
+     "unique_id": "AROAREDACTEDROLEID"
+    },
+    "before_sensitive": {
+     "inline_policy": [],
+     "managed_policy_arns": [],
+     "tags": {},
+     "tags_all": {}
+    }
+   },
+   "mode": "managed",
+   "module_address": "module.iam",
+   "name": "app_role",
+   "provider_name": "registry.terraform.io/hashicorp/aws",
+   "type": "aws_iam_role"
+  },
+  {
+   "address": "module.storage.aws_s3_bucket.data_bucket",
+   "change": {
+    "actions": [
+     "update"
+    ],
+    "after": {
+     "acceleration_status": "",
+     "acl": null,
+     "arn": "arn:aws:REDACTED",
+     "bucket": "drift-demo-dev-data-000000000000",
+     "bucket_domain_name": "drift-demo-dev-data-000000000000.s3.amazonaws.com",
+     "bucket_prefix": "",
+     "bucket_regional_domain_name": "drift-demo-dev-data-000000000000.s3.us-east-1.amazonaws.com",
+     "cors_rule": [],
+     "force_destroy": false,
+     "grant": [
+      {
+       "id": "0000000000000000000000000000000000000000000000000000000000000000",
+       "permissions": [
+        "FULL_CONTROL"
+       ],
+       "type": "CanonicalUser",
+       "uri": ""
+      }
+     ],
+     "hosted_zone_id": "Z3AQBSTGFYJSTF",
+     "id": "drift-demo-dev-data-000000000000",
+     "lifecycle_rule": [],
+     "logging": [],
+     "object_lock_configuration": [],
+     "object_lock_enabled": false,
+     "policy": "",
+     "region": "us-east-1",
+     "replication_configuration": [],
+     "request_payer": "BucketOwner",
+     "server_side_encryption_configuration": [
+      {
+       "rule": [
+        {
+         "apply_server_side_encryption_by_default": [
+          {
+           "kms_master_key_id": "",
+           "sse_algorithm": "AES256"
+          }
+         ],
+         "bucket_key_enabled": false
+        }
+       ]
+      }
+     ],
+     "tags": {
+      "CostCenter": "engineering-dev",
+      "Environment": "dev",
+      "ManagedBy": "terraform",
+      "Name": "drift-demo-data-bucket",
+      "Project": "drift-demo"
+     },
+     "tags_all": {
+      "CostCenter": "engineering-dev",
+      "Environment": "dev",
+      "ManagedBy": "terraform",
+      "Name": "drift-demo-data-bucket",
+      "Project": "drift-demo"
+     },
+     "timeouts": null,
+     "versioning": [
+      {
+       "enabled": true,
+       "mfa_delete": false
+      }
+     ],
+     "website": [],
+     "website_domain": null,
+     "website_endpoint": null
+    },
+    "after_sensitive": {
+     "cors_rule": [],
+     "grant": [
+      {
+       "permissions": [
+        false
+       ]
+      }
+     ],
+     "lifecycle_rule": [],
+     "logging": [],
+     "object_lock_configuration": [],
+     "replication_configuration": [],
+     "server_side_encryption_configuration": [
+      {
+       "rule": [
+        {
+         "apply_server_side_encryption_by_default": [
+          {}
+         ]
+        }
+       ]
+      }
+     ],
+     "tags": {},
+     "tags_all": {},
+     "versioning": [
+      {}
+     ],
+     "website": []
+    },
+    "after_unknown": {},
+    "before": {
+     "acceleration_status": "",
+     "acl": null,
+     "arn": "arn:aws:REDACTED",
+     "bucket": "drift-demo-dev-data-000000000000",
+     "bucket_domain_name": "drift-demo-dev-data-000000000000.s3.amazonaws.com",
+     "bucket_prefix": "",
+     "bucket_regional_domain_name": "drift-demo-dev-data-000000000000.s3.us-east-1.amazonaws.com",
+     "cors_rule": [],
+     "force_destroy": false,
+     "grant": [
+      {
+       "id": "0000000000000000000000000000000000000000000000000000000000000000",
+       "permissions": [
+        "FULL_CONTROL"
+       ],
+       "type": "CanonicalUser",
+       "uri": ""
+      }
+     ],
+     "hosted_zone_id": "Z3AQBSTGFYJSTF",
+     "id": "drift-demo-dev-data-000000000000",
+     "lifecycle_rule": [],
+     "logging": [],
+     "object_lock_configuration": [],
+     "object_lock_enabled": false,
+     "policy": "",
+     "region": "us-east-1",
+     "replication_configuration": [],
+     "request_payer": "BucketOwner",
+     "server_side_encryption_configuration": [
+      {
+       "rule": [
+        {
+         "apply_server_side_encryption_by_default": [
+          {
+           "kms_master_key_id": "",
+           "sse_algorithm": "AES256"
+          }
+         ],
+         "bucket_key_enabled": false
+        }
+       ]
+      }
+     ],
+     "tags": {
+      "CostCenter": "engineering-dev",
+      "Environment": "dev",
+      "ManagedBy": "terraform",
+      "Name": "drift-demo-data-bucket",
+      "Project": "drift-demo"
+     },
+     "tags_all": {
+      "CostCenter": "engineering-dev",
+      "Environment": "dev",
+      "ManagedBy": "terraform",
+      "Name": "drift-demo-data-bucket",
+      "Project": "drift-demo"
+     },
+     "timeouts": null,
+     "versioning": [
+      {
+       "enabled": false,
+       "mfa_delete": false
+      }
+     ],
+     "website": [],
+     "website_domain": null,
+     "website_endpoint": null
+    },
+    "before_sensitive": {
+     "cors_rule": [],
+     "grant": [
+      {
+       "permissions": [
+        false
+       ]
+      }
+     ],
+     "lifecycle_rule": [],
+     "logging": [],
+     "object_lock_configuration": [],
+     "replication_configuration": [],
+     "server_side_encryption_configuration": [
+      {
+       "rule": [
+        {
+         "apply_server_side_encryption_by_default": [
+          {}
+         ]
+        }
+       ]
+      }
+     ],
+     "tags": {},
+     "tags_all": {},
+     "versioning": [
+      {}
+     ],
+     "website": []
+    }
+   },
+   "mode": "managed",
+   "module_address": "module.storage",
+   "name": "data_bucket",
+   "provider_name": "registry.terraform.io/hashicorp/aws",
+   "type": "aws_s3_bucket"
+  }
+ ],
+ "terraform_version": "1.15.1",
+ "timestamp": "2026-09-14T11:52:27Z",
+ "variables": {
+  "ami_id": {
+   "value": "ami-00000000000000000"
+  },
+  "aws_region": {
+   "value": "us-east-1"
+  },
+  "cost_center": {
+   "value": "engineering-dev"
+  },
+  "desired_capacity": {
+   "value": 2
+  },
+  "environment": {
+   "value": "dev"
+  },
+  "instance_type": {
+   "value": "t3.micro"
+  },
+  "internal_cidr": {
+   "value": "10.0.0.0/8"
+  },
+  "project_name": {
+   "value": "drift-demo"
+  },
+  "vpc_cidr": {
+   "value": "10.0.0.0/16"
+  }
+ }
+}

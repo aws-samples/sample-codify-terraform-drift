@@ -1,0 +1,60 @@
+version: 0.2
+
+# Finalize: apply the gate verdict to the pull request that is already open.
+#
+# Runs on the codify project with a buildspec override, so it inherits the codify role and its
+# repository write credential without a fourth role existing. That is the point: the credential
+# that opened the pull request is the one that labels it, and nothing else gains write access.
+#
+# It holds no Terraform state access, which is why the gate verdict arrives as an artifact
+# rather than being computed here.
+
+env:
+  variables:
+    DRIFT_GATES_ARTIFACT_KEY: "SET_PER_BUILD"
+    DRIFT_CODIFY_ARTIFACT_KEY: "SET_PER_BUILD"
+  secrets-manager:
+    GIT_TOKEN: "${GIT_CREDENTIAL_SECRET_ID}:token"
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.12
+    commands:
+      - python3 -m venv /opt/driftcode
+      - /opt/driftcode/bin/pip install --quiet --upgrade pip
+      - /opt/driftcode/bin/pip install --quiet -e '.[aws]'
+      - ln -sf /opt/driftcode/bin/drift-* /usr/local/bin/
+
+  pre_build:
+    commands:
+      - aws s3 cp "s3://${DRIFT_ARTIFACTS_BUCKET}/${DRIFT_GATES_ARTIFACT_KEY}" /tmp/gates.zip
+      - unzip -o -q /tmp/gates.zip -d /tmp/gates
+      - aws s3 cp "s3://${DRIFT_ARTIFACTS_BUCKET}/${DRIFT_CODIFY_ARTIFACT_KEY}" /tmp/codify.zip
+      - unzip -o -q /tmp/codify.zip -d /tmp/codify
+
+  build:
+    commands:
+      # Exits non-zero only when the pull request could not be labelled at all. A blocked
+      # verdict exits zero: the pull request is correctly marked and a human has the evidence,
+      # which is the outcome the design asks for rather than a pipeline failure.
+      - |
+        drift-finalize \
+          --repo "${TARGET_REPO_SLUG}" \
+          --gates /tmp/gates/gates.json \
+          --codify-result /tmp/codify/codify.json \
+          --workspace-id "${DRIFT_WORKSPACE_ID}" \
+          --out /tmp/finalize.json
+
+  post_build:
+    commands:
+      - cp /tmp/finalize.json "${CODEBUILD_SRC_DIR}/" 2>/dev/null || true
+      - |
+        if [ ! -f "${CODEBUILD_SRC_DIR}/finalize.json" ]; then
+          echo '{"results":[],"note":"the finalize stage did not produce a result"}' > "${CODEBUILD_SRC_DIR}/finalize.json"
+        fi
+
+artifacts:
+  files:
+    - finalize.json
+  name: drift-finalize-$(date +%Y%m%d-%H%M%S)

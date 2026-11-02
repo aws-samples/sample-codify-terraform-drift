@@ -1,0 +1,195 @@
+version: 0.2
+
+# Detection stage of the drift-to-code pattern.
+#
+# Produces TWO plans and reconciles them, then reduces whatever survives to a bounded
+# work order. A locked `plan -refresh-only` alone is not a usable drift trigger: it
+# reports provider representation normalization as drift, and all of it carries
+# actions:["update"], so an action filter cannot separate it from a real change. See
+# src/driftcode/detect/reconcile.py.
+#
+# The stage ends by producing authorization.json, which names one file and one line per
+# attribute the agent may change. Every decision the agent is not permitted to make -
+# whether the drift is in scope, which source layer holds the value, which file that is,
+# and what the agent may see - is made here, without a model. See
+# src/driftcode/authorize.py.
+#
+# Every terraform invocation runs THROUGH drift-tf-guard, which permits only
+# `plan`/`show`/`init`/`providers`/`validate`/`fmt`/`version` and rejects `apply` in any
+# form - including `apply -refresh-only`, the variant that persists refreshed state - then
+# execs the argv it just checked. It is a wrapper, not an adviser: a guard that validates
+# one string while the next line runs another is a comment. That is still only defence in
+# depth; the authoritative read-only guarantee is the IAM deny on s3:PutObject for the
+# state key, granted to this project's role in terraform/iam.tf.
+
+env:
+  variables:
+    TERRAFORM_VERSION: "1.9.8"
+    # Bounded so a lock held by another operation fails loudly instead of hanging.
+    TF_LOCK_TIMEOUT: "120s"
+    # TF_WORKING_DIR, TARGET_REPO_URL, TARGET_REPO_SLUG, TARGET_REPO_REF, DRIFT_LEDGER_TABLE,
+    # DRIFT_WORKSPACE_ID and DRIFT_REQUIRED_SAMPLES are set as project environment
+    # variables by terraform/main.tf. They are deliberately NOT defaulted here:
+    # CodeBuild resolves project variables over buildspec ones, so a default here would
+    # be dead text that reads as configuration and misleads whoever edits it.
+  exported-variables:
+    # Read by the state machine to decide whether to run the codify stage. Exported rather
+    # than left in an artifact so the orchestrator branches on a value the build produced,
+    # not on a document it has to fetch and parse.
+    - DRIFT_HAS_WORK
+    - DRIFT_WORK_ORDERS
+  secrets-manager:
+    # Read-only credential for cloning the target repository. Injected at runtime;
+    # never baked into the image or committed. Terraform creates the secret container,
+    # the value is supplied out-of-band.
+    GIT_TOKEN: "${GIT_CREDENTIAL_SECRET_ID}:token"
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.12
+    commands:
+      - echo "Installing Terraform ${TERRAFORM_VERSION}"
+      - curl -sS -o /tmp/tf.zip "https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip"
+      - unzip -q -o /tmp/tf.zip -d /usr/local/bin
+      # Installed into a virtualenv rather than the image's site-packages. The image ships
+      # its own build tooling, and Checkov's transitive pins conflict with it - harmlessly,
+      # since nothing here imports those packages, but a resolver error in the log of a
+      # security-relevant build is noise that hides real failures. A venv removes the
+      # interaction instead of pinning against Checkov's own constraints.
+      - python3 -m venv /opt/driftcode
+      - /opt/driftcode/bin/pip install --quiet --upgrade pip
+      - /opt/driftcode/bin/pip install --quiet -e '.[gates,aws]'
+      # Linked onto PATH so later phases, which each start a fresh shell, need no activation.
+      - ln -sf /opt/driftcode/bin/drift-* /opt/driftcode/bin/checkov /usr/local/bin/
+      - drift-tf-guard version
+
+  pre_build:
+    commands:
+      - echo "Cloning target repository ${TARGET_REPO_URL} @ ${TARGET_REPO_REF:-main}"
+      - git clone --quiet --depth 1 --branch "${TARGET_REPO_REF:-main}"
+        "https://oauth2:${GIT_TOKEN}@${TARGET_REPO_URL}" /tmp/target
+      # Record the commit the run was reconciled against. The "in full plan only"
+      # quadrant needs a HEAD-vs-deployed comparison, and this is the HEAD half.
+      - git -C /tmp/target rev-parse HEAD | tee /tmp/target-head.txt
+      - drift-tf-guard -chdir="/tmp/target/${TF_WORKING_DIR}" init -input=false -no-color
+
+  build:
+    commands:
+      # --- plan A: locked refresh-only (state -> live) -----------------------
+      # Locking stays ON. -lock=false would admit torn reads and make the
+      # missed-cadence alert unreachable, so drift-tf-guard rejects that flag.
+      - |
+        drift-tf-guard -chdir="/tmp/target/${TF_WORKING_DIR}" plan -refresh-only \
+          -lock-timeout="${TF_LOCK_TIMEOUT}" -input=false -no-color \
+          -out=/tmp/refresh.tfplan 2>&1 | tee /tmp/terraform.log
+      - drift-tf-guard -chdir="/tmp/target/${TF_WORKING_DIR}" show -json /tmp/refresh.tfplan > /tmp/refresh-only.plan.json
+
+      # --- plan B: full plan (live -> config) -------------------------------
+      # Required, not supplementary. It is the discriminator that separates real
+      # drift from provider normalization, and it also surfaces replacement-class
+      # (ForceNew) drift that refresh-only cannot represent.
+      - |
+        drift-tf-guard -chdir="/tmp/target/${TF_WORKING_DIR}" plan \
+          -lock-timeout="${TF_LOCK_TIMEOUT}" -input=false -no-color \
+          -out=/tmp/full.tfplan 2>&1 | tee -a /tmp/terraform.log
+      - drift-tf-guard -chdir="/tmp/target/${TF_WORKING_DIR}" show -json /tmp/full.tfplan > /tmp/full.plan.json
+
+      # --- provider schema, for Gate A attribute classification -------------
+      # Without this, computed and write-only attributes look codifiable.
+      - drift-tf-guard -chdir="/tmp/target/${TF_WORKING_DIR}" providers schema -json > /tmp/schema.json
+
+      # --- reconcile ---------------------------------------------------------
+      - |
+        drift-reconcile \
+          --refresh-only /tmp/refresh-only.plan.json \
+          --full-plan /tmp/full.plan.json \
+          --out /tmp/reconciled.json
+
+      # --- policy scan: is the drift itself dangerous? -----------------------
+      # Checkov CANNOT scan the refresh-only plan. Its terraform_plan framework builds
+      # from planned_values, which a refresh-only plan leaves empty - the refreshed live
+      # values live in prior_state. Observed with checkov 3.3.17 on a captured real plan:
+      # 0 resources evaluated, 0 findings, which reads as a clean estate. drift-project
+      # transplants prior_state into planned_values so the live values are scannable.
+      - drift-project --refresh-only-plan /tmp/refresh-only.plan.json --out /tmp/drift-projection.plan.json
+      - checkov -f /tmp/drift-projection.plan.json --output json --quiet --soft-fail > /tmp/checkov-drift.json || true
+
+      # The baseline: the full plan represents configured intent. The verdict is the
+      # difference between the two scans, never the failure count - the sample workspace
+      # carries 9 pre-existing findings, so any absolute threshold fails every run forever.
+      - checkov -f /tmp/full.plan.json --output json --quiet --soft-fail > /tmp/checkov-baseline.json || true
+
+      # --- Gate A: fail closed unless completeness can be asserted ----------
+      # Exits non-zero when the observable surface cannot be established, which
+      # fails the build deliberately. "No drift" is never inferred from silence,
+      # and neither is "not dangerous" inferred from a scan that evaluated nothing.
+      - |
+        drift-gate-a \
+          --refresh-only-plan /tmp/refresh-only.plan.json \
+          --provider-schema /tmp/schema.json \
+          --reconciled /tmp/reconciled.json \
+          --checkov-result /tmp/checkov-drift.json \
+          --checkov-baseline /tmp/checkov-baseline.json \
+          --log /tmp/terraform.log \
+          --out /tmp/gate-a.json
+
+      # --- authorize: reduce drift to a bounded edit, or escalate -----------
+      # Runs the deterministic chain the agent depends on: scope guard, source-layer
+      # tracing, edit-target resolution and sanitization. Its output names one file and
+      # one line per attribute, which is both the agent's instruction and the boundary
+      # the verifier enforces. Nothing to codify is a normal outcome and exits zero.
+      #
+      # DRIFT_LEDGER_TABLE, DRIFT_WORKSPACE_ID and TARGET_REPO_SLUG make the debounce
+      # real: the signature is what makes "the same drift" decidable, and the ledger is
+      # what makes "consecutive" decidable. Missing any of them leaves every count at 1,
+      # which suppresses rather than inventing confirmation. CODEBUILD_BUILD_NUMBER is
+      # monotonic per project, so contiguity is exact - elapsed time would have to guess
+      # the cadence and would silently accept a gap when a run fails.
+      - |
+        drift-authorize \
+          --reconciled /tmp/reconciled.json \
+          --gate-a /tmp/gate-a.json \
+          --refresh-only-plan /tmp/refresh-only.plan.json \
+          --repo-root /tmp/target \
+          --workspace-dir "${TF_WORKING_DIR}" \
+          --ledger-table "${DRIFT_LEDGER_TABLE}" \
+          --workspace-id "${DRIFT_WORKSPACE_ID}" \
+          --repo "${TARGET_REPO_SLUG}" \
+          --build-number "${CODEBUILD_BUILD_NUMBER}" \
+          --required-samples "${DRIFT_REQUIRED_SAMPLES:-2}" \
+          --out /tmp/authorization.json
+
+  post_build:
+    commands:
+      - echo "Detection complete. Reconciliation summary:"
+      - python3 -c "import json;r=json.load(open('/tmp/reconciled.json'));print(json.dumps(r['counts'],indent=2))"
+      - |
+        export DRIFT_HAS_WORK="$(/opt/driftcode/bin/python -c "
+        import json; print(str(json.load(open('/tmp/authorization.json'))['has_work']).lower())")"
+      - |
+        export DRIFT_WORK_ORDERS="$(/opt/driftcode/bin/python -c "
+        import json; print(json.load(open('/tmp/authorization.json'))['counts']['work_orders'])")"
+      - echo "has_work=${DRIFT_HAS_WORK} work_orders=${DRIFT_WORK_ORDERS}"
+      - echo "Authorization summary:"
+      - python3 -c "import json;r=json.load(open('/tmp/authorization.json'));print(json.dumps(r['counts'],indent=2))"
+      - cp /tmp/reconciled.json /tmp/gate-a.json /tmp/authorization.json /tmp/target-head.txt "${CODEBUILD_SRC_DIR}/" || true
+      - cp /tmp/drift-projection.plan.json /tmp/checkov-drift.json /tmp/checkov-baseline.json "${CODEBUILD_SRC_DIR}/" || true
+      - cp /tmp/refresh-only.plan.json /tmp/full.plan.json "${CODEBUILD_SRC_DIR}/" || true
+
+artifacts:
+  # Plan JSON carries account identifiers and can carry sensitive values depending on
+  # resource types. Treat these artifacts as sensitive: encrypt at rest, restrict
+  # access, and set a short retention. Never hand raw plan output to the agent - the
+  # agent receives a sanitized, structured record derived from reconciled.json.
+  files:
+    - reconciled.json
+    - gate-a.json
+    - authorization.json
+    - drift-projection.plan.json
+    - target-head.txt
+    - refresh-only.plan.json
+    - full.plan.json
+    - checkov-drift.json
+    - checkov-baseline.json
+  name: drift-detection-$(date +%Y%m%d-%H%M%S)

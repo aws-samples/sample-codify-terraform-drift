@@ -1,0 +1,163 @@
+<mxfile host="Electron" agent="driftcode">
+  <diagram id="drift-pipeline" name="Deployed pipeline">
+    <mxGraphModel dx="1625" dy="640" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="3Arzn1ubSl6Yz2iR6mNa-2" parent="1" style="fillColor=#F5F7F8;strokeColor=#879196;dashed=0;verticalAlign=top;align=left;spacingLeft=10;spacingTop=4;fontStyle=0;whiteSpace=wrap;html=1;fontSize=10;fontColor=#555555;rounded=0;" value="" vertex="1">
+          <mxGeometry height="160" width="770" x="420" y="301" as="geometry" />
+        </mxCell>
+        <mxCell id="title" parent="1" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=13;spacing=6;" value="&lt;b&gt;Drift-to-Code: codifying valid Terraform drift&lt;/b&gt;&lt;br&gt;Deliberate out-of-band change becomes a reviewable pull request instead of being reverted." vertex="1">
+          <mxGeometry height="50" width="1100" x="40" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="scope-banner" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=none;fontSize=10;align=left;spacingLeft=10;verticalAlign=middle;" value="&lt;b&gt;Scope:&lt;/b&gt; in-place attribute updates on Terraform-managed, single-instance resources. Everything else escalates to a human." vertex="1">
+          <mxGeometry height="30" width="1100" x="40" y="74" as="geometry" />
+        </mxCell>
+        <mxCell id="aws-cloud" parent="1" style="points=[[0,0],[0.25,0],[0.5,0],[0.75,0],[1,0],[1,0.25],[1,0.5],[1,0.75],[1,1],[0.75,1],[0.5,1],[0.25,1],[0,1],[0,0.75],[0,0.5],[0,0.25]];outlineConnect=0;gradientColor=none;html=1;whiteSpace=wrap;fontSize=12;fontStyle=1;shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_aws_cloud_alt;strokeColor=#232F3E;fillColor=none;verticalAlign=top;align=left;spacingLeft=30;spacingTop=3;dashed=0;rounded=0;" value="AWS Cloud" vertex="1">
+          <mxGeometry height="580" width="1240" x="40" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="eventbridge" parent="1" style="points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#E7157B;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=11;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.eventbridge;sketch=0;" value="&lt;b&gt;EventBridge&lt;/b&gt;&lt;br&gt;&lt;i&gt;schedule&lt;/i&gt;" vertex="1">
+          <mxGeometry height="60" width="60" x="90" y="340" as="geometry" />
+        </mxCell>
+        <mxCell id="sfn" parent="1" style="points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#CD2264;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=11;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.step_functions;sketch=0;" value="&lt;b&gt;Step Functions&lt;/b&gt;&lt;br&gt;&lt;i&gt;orchestration&lt;/i&gt;" vertex="1">
+          <mxGeometry height="60" width="60" x="260" y="340" as="geometry" />
+        </mxCell>
+        <mxCell id="lease" parent="1" style="points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#C925D1;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=11;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.dynamodb;sketch=0;" value="&lt;b&gt;DynamoDB&lt;/b&gt;&lt;br&gt;&lt;i&gt;run lease&lt;/i&gt;" vertex="1">
+          <mxGeometry height="60" width="60" x="260" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="detect" parent="1" style="points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#C925D1;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=11;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.codebuild;sketch=0;" value="&lt;b&gt;CodeBuild&lt;/b&gt;&lt;br&gt;&lt;i&gt;① detect&lt;/i&gt;" vertex="1">
+          <mxGeometry height="60" width="60" x="450" y="340" as="geometry" />
+        </mxCell>
+        <mxCell id="tfstate" parent="1" style="points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#7AA116;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=11;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.s3;sketch=0;" value="&lt;b&gt;S3&lt;/b&gt; + &lt;b&gt;DynamoDB&lt;/b&gt;&lt;br&gt;&lt;i&gt;Terraform state + lock&lt;/i&gt;" vertex="1">
+          <mxGeometry height="60" width="60" x="850" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="codify" parent="1" style="points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#C925D1;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=11;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.codebuild;sketch=0;" value="&lt;b&gt;CodeBuild&lt;/b&gt;&lt;br&gt;&lt;i&gt;② codify&lt;/i&gt;" vertex="1">
+          <mxGeometry height="60" width="60" x="650" y="340" as="geometry" />
+        </mxCell>
+        <mxCell id="bedrock" parent="1" style="points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#01A88D;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=11;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.bedrock;sketch=0;" value="&lt;b&gt;Bedrock&lt;/b&gt;&lt;br&gt;&lt;i&gt;Converse API&lt;/i&gt;" vertex="1">
+          <mxGeometry height="60" width="60" x="650" y="490" as="geometry" />
+        </mxCell>
+        <mxCell id="gates" parent="1" style="points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#C925D1;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=11;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.codebuild;sketch=0;" value="&lt;b&gt;CodeBuild&lt;/b&gt;&lt;br&gt;&lt;i&gt;③ gates B and C&lt;/i&gt;" vertex="1">
+          <mxGeometry height="60" width="60" x="850" y="340" as="geometry" />
+        </mxCell>
+        <mxCell id="finalize" parent="1" style="points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#C925D1;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=11;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.codebuild;sketch=0;" value="&lt;b&gt;CodeBuild&lt;/b&gt;&lt;br&gt;&lt;i&gt;④ finalize&lt;/i&gt;" vertex="1">
+          <mxGeometry height="60" width="60" x="1050" y="340" as="geometry" />
+        </mxCell>
+        <mxCell id="ledger" parent="1" style="points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#C925D1;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=11;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.dynamodb;sketch=0;" value="&lt;b&gt;DynamoDB&lt;/b&gt;&lt;br&gt;&lt;i&gt;drift observations&lt;/i&gt;" vertex="1">
+          <mxGeometry height="60" width="60" x="450" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="sns" parent="1" style="points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#E7157B;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=11;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.sns;sketch=0;" value="&lt;b&gt;SNS&lt;/b&gt;&lt;br&gt;&lt;i&gt;escalation&lt;/i&gt;" vertex="1">
+          <mxGeometry height="60" width="60" x="1050" y="480" as="geometry" />
+        </mxCell>
+        <mxCell id="github" parent="1" style="dashed=0;outlineConnect=0;html=1;align=center;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;shape=mxgraph.weblogos.github;rounded=0;fontSize=11;fontColor=#232F3E;" value="&lt;b&gt;GitHub&lt;/b&gt;" vertex="1">
+          <mxGeometry height="60" width="60" x="1370" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="source-bucket" parent="1" style="points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#7AA116;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=11;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.s3;sketch=0;" value="&lt;b&gt;S3&lt;/b&gt;&lt;br&gt;&lt;i&gt;packaged source&lt;/i&gt;" vertex="1">
+          <mxGeometry height="60" width="60" x="650" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-eb-sfn" edge="1" parent="1" source="eventbridge" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;labelBackgroundColor=#F5F5F5;fontSize=11;" target="sfn" value="scheduled trigger">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-sfn-lease" edge="1" parent="1" source="sfn" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1;dashed=1;strokeColor=#879196;labelBackgroundColor=#F5F5F5;fontSize=9;" target="lease" value="acquire lease">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="200" y="350" />
+              <mxPoint x="200" y="190" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge-sfn-detect" edge="1" parent="1" source="sfn" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;labelBackgroundColor=#F5F5F5;fontSize=11;" target="detect" value="start detection">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-detect-state" edge="1" parent="1" source="detect" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1;dashed=1;strokeColor=#879196;labelBackgroundColor=#F5F5F5;fontSize=9;" target="tfstate" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="560" y="350" />
+              <mxPoint x="560" y="280" />
+              <mxPoint x="750" y="280" />
+              <mxPoint x="750" y="190" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge-detect-ledger" edge="1" parent="1" source="detect" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1;dashed=1;strokeColor=#879196;endArrow=none;labelBackgroundColor=#F5F5F5;fontSize=9;" target="ledger" value="two consecutive observations">
+          <mxGeometry relative="1" x="-0.0435" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="400" y="350" />
+              <mxPoint x="400" y="190" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge-detect-codify" edge="1" parent="1" source="detect" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;labelBackgroundColor=#F5F5F5;fontSize=11;" target="codify" value="authorized change">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-codify-bedrock" edge="1" parent="1" source="codify" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1;dashed=1;strokeColor=#879196;labelBackgroundColor=#F5F5F5;fontSize=9;" target="bedrock" value="one bounded task">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="620" y="380" />
+              <mxPoint x="620" y="520" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge-codify-gates" edge="1" parent="1" source="codify" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;labelBackgroundColor=#F5F5F5;fontSize=11;" target="gates" value="scan the branch">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-gates-state" edge="1" parent="1" source="gates" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1;dashed=1;strokeColor=#879196;labelBackgroundColor=#F5F5F5;fontSize=9;" target="tfstate" value="plan, read-only">
+          <mxGeometry relative="1" x="-0.12" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="800" y="350" />
+              <mxPoint x="800" y="190" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge-gates-finalize" edge="1" parent="1" source="gates" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;labelBackgroundColor=#F5F5F5;fontSize=11;" target="finalize" value="gate verdict">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge-codify-github" edge="1" parent="1" source="codify" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;labelBackgroundColor=#F5F5F5;fontSize=11;" target="github" value="open PR">
+          <mxGeometry relative="1" x="0.5263" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="680.03" y="310" />
+              <mxPoint x="1310.03" y="310" />
+              <mxPoint x="1310.03" y="350" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge-finalize-github" edge="1" parent="1" source="finalize" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;exitX=1;exitY=0.5;exitDx=0;exitDy=0;labelBackgroundColor=#F5F5F5;fontSize=11;" target="github" value="apply labels">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1210" y="370" />
+              <mxPoint x="1210" y="370" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge-sfn-sns" edge="1" parent="1" source="sfn" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#DD344C;labelBackgroundColor=#F5F5F5;fontSize=9;" target="sns" value="on failure">
+          <mxGeometry relative="1" x="-0.6" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="400.03" y="380" />
+              <mxPoint x="400.03" y="600" />
+              <mxPoint x="920.03" y="600" />
+              <mxPoint x="920.03" y="510" />
+            </Array>
+            <mxPoint x="880" y="760" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge-source-detect" edge="1" parent="1" source="source-bucket" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1;dashed=1;strokeColor=#879196;endArrow=none;labelBackgroundColor=#F5F5F5;fontSize=9;" target="detect" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="560" y="190" />
+              <mxPoint x="560" y="350" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="legend" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=none;fontSize=10;align=left;spacingLeft=10;spacingTop=6;verticalAlign=top;" value="&lt;b&gt;Reading this diagram&lt;/b&gt; &amp;nbsp; Solid arrows are the run. Dashed grey arrows are reads and writes. Red is the escalation path.&lt;br&gt;&lt;b&gt;No stage holds both Terraform state access and a repository write credential&lt;/b&gt; — which is why gates is a separate stage from codify.&lt;br&gt;&lt;br&gt;&lt;b&gt;① detect&lt;/b&gt; &amp;nbsp; Reads state; no GitHub credential. Intersects a refresh-only plan with a full plan — refresh-only alone reports provider normalization as drift.&lt;br&gt;&lt;b&gt;② codify&lt;/b&gt; &amp;nbsp; GitHub App token and Bedrock; state access denied outright. Verifies its own diff against the authorized change before publishing.&lt;br&gt;&lt;b&gt;③ gates&lt;/b&gt; &amp;nbsp; Reads state and live resources; no GitHub credential. Gate B: Checkov on the branch plan. Gate C: Checkov on source, because a plan is blind to ignore_changes. Both verdicts are deltas against a baseline.&lt;br&gt;&lt;b&gt;④ finalize&lt;/b&gt; &amp;nbsp; The codify project under a buildspec override, so the credential that opened the PR is the one that labels it.&lt;br&gt;&lt;br&gt;The PR opens as &lt;b&gt;do-not-merge&lt;/b&gt; + &lt;b&gt;gates-pending&lt;/b&gt;, flips to &lt;b&gt;drift-codified&lt;/b&gt; on pass, and waits for review. App token: one repository, one hour." vertex="1">
+          <mxGeometry height="150" width="1240" x="40" y="700" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
